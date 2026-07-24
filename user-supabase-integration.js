@@ -66,3 +66,14 @@ async function cancelBookingAsRider(bookingId) {
   const { error } = await sb.from('bookings').update({ status: 'cancelled_rider' }).eq('id', bookingId);
   if (error) throw error;
 }
+
+async function getRiderBookings() {
+  const user = await sbGetCurrentUser();
+  if (!user) throw new Error('Not signed in');
+  const { data, error } = await sb.from('bookings')
+    .select('*').eq('rider_id', user.id)
+    .in('status', ['delivered','cancelled_rider','cancelled_driver'])
+    .order('created_at', { ascending: false });
+  if (error) throw error;
+  return data;
+}

@@ -1609,7 +1609,43 @@ function saveLoadToHistory(status){
   localStorage.setItem('el-loads',JSON.stringify(loads));
 }
 
-function getLoads(){return JSON.parse(localStorage.getItem('el-loads')||'[]');}
+let _loadsCache=[];
+function getLoads(){return _loadsCache;}
+async function _mapBookingRowToLoad(b){
+  const d=new Date(b.created_at);
+  let driverName='—',driverVehicle='—';
+  if(b.driver_id){
+    try{
+      const drv=await getDriverProfile(b.driver_id);
+      driverName=drv.full_name||'—';
+      driverVehicle=(drv.vehicle_type||'')+(drv.vehicle_plate?(' · '+drv.vehicle_plate):'');
+    }catch(e){/* driver profile unavailable, leave placeholders */}
+  }
+  return {
+    id:b.id,
+    date:d.toLocaleDateString('en-ZA',{day:'2-digit',month:'short',year:'numeric'}),
+    time:d.toLocaleTimeString('en-ZA',{hour:'2-digit',minute:'2-digit'}),
+    status:b.status==='delivered'?'completed':'cancelled',
+    vehicleName:b.vehicle_name,
+    pickup:b.pickup_address||'—',
+    dropoff:b.dropoff_address||'—',
+    addons:b.addons||[],
+    fare:b.total_fare,
+    driverName,
+    driverVehicle,
+    rating:b.rider_rating||null
+  };
+}
+async function refreshLoads(){
+  try{
+    const rows=await getRiderBookings();
+    _loadsCache=await Promise.all(rows.map(_mapBookingRowToLoad));
+  }catch(e){
+    console.error('Failed to load ride history',e);
+    _loadsCache=[];
+  }
+  return _loadsCache;
+}
 
 let historyFilter='all';
 function filterHistory(btn){
@@ -1621,9 +1657,10 @@ function filterHistory(btn){
   renderHistoryList();
 }
 
-function renderHistoryList(){
+async function renderHistoryList(){
   const container=document.getElementById('historyList');
   if(!container)return;
+  await refreshLoads();
   let loads=getLoads();
   if(historyFilter!=='all')loads=loads.filter(l=>l.status===historyFilter);
   if(!loads.length){
@@ -1653,7 +1690,8 @@ function renderHistoryList(){
 }
 
 /* ─── PROFILE SCREEN ───────────────────── */
-function renderProfileScreen(){
+async function renderProfileScreen(){
+  await refreshLoads();
   const loads=getLoads();
   const completed=loads.filter(l=>l.status==='completed');
   const set=(id,val)=>{const el=document.getElementById(id);if(el)el.textContent=val;};
