@@ -895,7 +895,7 @@ footer .logo-svg{width:80px;height:auto;}
     </div>
     <div class="msec">
       <div class="mlbl">Support</div>
-      <div class="row" onclick="openSupportChat()"><div class="ri"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#888" stroke-width="2"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3M12 17h.01" stroke="#888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="rb"><div class="rt">Help & support</div><div class="rs">24/7 live chat</div></div><svg class="chev" width="8" height="13" viewBox="0 0 8 14" fill="none"><path d="M1 1l6 6-6 6" stroke="#444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="row" onclick="openSupportChat()"><div class="ri"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#888" stroke-width="2"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3M12 17h.01" stroke="#888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="rb"><div class="rt">Help & support</div><div class="rs">Email support · Replies within 24 hours</div></div><svg class="chev" width="8" height="13" viewBox="0 0 8 14" fill="none"><path d="M1 1l6 6-6 6" stroke="#444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
       <div class="row" onclick="signOut()"><div class="ri"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9" stroke="#888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="rb"><div class="rt">Sign out</div></div><svg class="chev" width="8" height="13" viewBox="0 0 8 14" fill="none"><path d="M1 1l6 6-6 6" stroke="#444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
     </div>
     </div>
@@ -2353,7 +2353,9 @@ function submitBusinessApplication(){
 
 /* ─── PROFILE ACTIONS ──────────────────── */
 function openSupportChat(){
-  go('chat');
+  const bookingId = (typeof AppState !== 'undefined' && AppState.currentBookingId) ? AppState.currentBookingId : null;
+  const body = bookingId ? ('Booking ID: ' + bookingId + '\n\n') : '';
+  window.location.href = 'mailto:support@eesyload.co.za?subject=' + encodeURIComponent('EesyLoad Rider Support') + '&body=' + encodeURIComponent(body);
 }
 function signOut(){
   if(!confirm('Sign out of EesyLoad?'))return;
