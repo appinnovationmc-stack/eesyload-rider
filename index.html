@@ -618,6 +618,21 @@ footer .logo-svg{width:80px;height:auto;}
   </div>
 </div>
 
+  <!-- ══════ RIDER NAME (new riders only) ══════ -->
+  <div id="riderName" class="scr">
+  <div class="otp-inner">
+    <div class="otp-title">What's your name?</div>
+    <div class="otp-sub">So your driver knows who they're picking up.</div>
+    <div class="phone-input">
+      <input id="riderNameInput" type="text" placeholder="Your full name" style="background:transparent;border:none;outline:none;font-family:var(--f);color:var(--w);width:100%;font-size:16px;">
+    </div>
+    <div id="riderName-error-msg" style="color:#FF3B30;font-size:13px;margin-top:4px;min-height:16px;"></div>
+  </div>
+  <div class="otp-foot">
+    <button class="cta" id="riderName-save-btn" onclick="saveRiderName()">Continue →</button>
+  </div>
+</div>
+
   <!-- ══════ HOME ══════ -->
   <div id="home" class="scr">
     <div class="map-wrap"><div id="hmap" style="width:100%;height:500px;"></div></div>
@@ -2592,6 +2607,26 @@ function startTrk(){
     }, 1000);
   }
 
+  window.saveRiderName = async function(){
+    const inp=document.getElementById('riderNameInput');
+    const name=(inp?inp.value:'').trim();
+    const errEl=document.getElementById('riderName-error-msg');
+    if(!name){
+      if(errEl)errEl.textContent='Please enter your name.';
+      return;
+    }
+    const btn=document.getElementById('riderName-save-btn');
+    if(btn){btn.disabled=true;btn.textContent='Saving…';}
+    try{
+      await sbUpdateRiderName(name);
+      go('home');
+    }catch(e){
+      if(errEl)errEl.textContent='Could not save your name: '+e.message;
+    }finally{
+      if(btn){btn.disabled=false;btn.textContent='Continue →';}
+    }
+  };
+
   window.otpResend = function(){
     boxes.forEach(id => {
       const el = document.getElementById(id);
@@ -2617,9 +2652,14 @@ function startTrk(){
     const btnEl=document.getElementById('otp-verify-btn');
     if(btnEl){btnEl.disabled=true;btnEl.textContent='Verifying…';}
     try{
-      await sbVerifyOtp(_riderPhone, code);
+      const user=await sbVerifyOtp(_riderPhone, code);
       if(btnEl){btnEl.disabled=false;btnEl.textContent='Verify →';}
-      go('home');
+      const{data:profile}=await sb.from('profiles').select('full_name').eq('id',user.id).single();
+      if(profile&&profile.full_name){
+        go('home');
+      }else{
+        go('riderName');
+      }
     }catch(e){
       if(btnEl){btnEl.disabled=false;btnEl.textContent='Verify →';}
       boxes.forEach(id => {

@@ -19,6 +19,13 @@ async function sbVerifyOtp(phone, token) {
   return data.user;
 }
 
+async function sbUpdateRiderName(fullName) {
+  const user = await sbGetCurrentUser();
+  const { error } = await sb.from('profiles').update({ full_name: fullName }).eq('id', user.id);
+  if (error) throw error;
+  return true;
+}
+
 async function sbGetCurrentUser() {
   const { data } = await sb.auth.getUser();
   return data.user;
