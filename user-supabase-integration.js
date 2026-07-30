@@ -195,7 +195,7 @@ async function getDriverProfile(driverId) {
 async function getRiderProfile() {
   const user = await sbGetCurrentUser();
   if (!user) throw new Error('Not signed in');
-  const { data, error } = await sb.from('profiles').select('full_name,phone').eq('id', user.id).single();
+  const { data, error } = await sb.from('profiles').select('full_name,phone,avatar_url').eq('id', user.id).single();
   if (error) throw error;
   return data;
 }
@@ -214,4 +214,63 @@ async function getRiderBookings() {
     .order('created_at', { ascending: false });
   if (error) throw error;
   return data;
+}
+
+
+async function handleAvatarUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const statusEl = document.getElementById('editProfileStatus');
+  if (statusEl) statusEl.textContent = 'Uploading...';
+  try {
+    const { data: { user } } = await sb.auth.getUser();
+    if (!user) throw new Error('Not signed in');
+    const ext = file.name.split('.').pop();
+    const path = `${user.id}/avatar.${ext}`;
+    const { error: uploadError } = await sb.storage.from('avatars').upload(path, file, { upsert: true });
+    if (uploadError) throw uploadError;
+    const { data: urlData } = sb.storage.from('avatars').getPublicUrl(path);
+    const avatarUrl = urlData.publicUrl + '?t=' + Date.now();
+    const { error: updateError } = await sb.from('profiles').update({ avatar_url: avatarUrl }).eq('id', user.id);
+    if (updateError) throw updateError;
+    const imgEl = document.getElementById('editAvatarImg');
+    if (imgEl) imgEl.src = avatarUrl;
+    if (statusEl) statusEl.textContent = 'Photo updated';
+  } catch (err) {
+    console.error('Avatar upload failed:', err);
+    if (statusEl) statusEl.textContent = 'Upload failed \u2014 try again';
+  }
+}
+
+async function saveEditProfile() {
+  const nameInput = document.getElementById('editNameInput');
+  const statusEl = document.getElementById('editProfileStatus');
+  const newName = nameInput ? nameInput.value.trim() : '';
+  if (!newName) {
+    if (statusEl) statusEl.textContent = 'Name cannot be empty';
+    return;
+  }
+  if (statusEl) statusEl.textContent = 'Saving...';
+  try {
+    await sbUpdateRiderName(newName);
+    const profNameEl = document.getElementById('profName');
+    if (profNameEl) profNameEl.textContent = newName;
+    if (statusEl) statusEl.textContent = 'Saved';
+    setTimeout(() => go('profile'), 500);
+  } catch (err) {
+    console.error('Save profile failed:', err);
+    if (statusEl) statusEl.textContent = 'Save failed \u2014 try again';
+  }
+}
+
+async function openEditProfile() {
+  try {
+    const profile = await getRiderProfile();
+    const nameInput = document.getElementById('editNameInput');
+    const imgEl = document.getElementById('editAvatarImg');
+    if (nameInput) nameInput.value = (profile && profile.full_name) || '';
+    if (imgEl) imgEl.src = (profile && profile.avatar_url) || '';
+  } catch (err) {
+    console.error('Failed to load profile for editing:', err);
+  }
 }
