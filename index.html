@@ -1008,26 +1008,25 @@ footer .logo-svg{width:80px;height:auto;}
     <div class="sos-inner">
       <div class="sos-header">
         <button class="back" onclick="go('tracking')"><svg width="10" height="17" viewBox="0 0 10 18" fill="none"><path d="M9 1L1 9l8 8" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-        <div><div class="sos-title">Emergency SOS</div><div class="sos-sub">Your GPS location is being shared in real-time with our safety team.</div></div>
+        <div><div class="sos-title">Emergency SOS</div><div class="sos-sub">For immediate danger, call SAPS or ambulance below first.</div></div>
+      </div>
+      <div class="sos-options" style="margin-bottom:18px;">
+        <a class="sos-opt" href="tel:10111" style="text-decoration:none;"><div class="sos-oi" style="background:rgba(39,110,241,.12);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="#276EF1" stroke-width="2"/></svg></div><div><div class="sos-ot">Call SAPS (10111)</div><div class="sos-os">South African Police Service</div></div></a>
+        <a class="sos-opt" href="tel:10177" style="text-decoration:none;"><div class="sos-oi" style="background:rgba(255,59,48,.1);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M22 12h-4l-3 9L9 3l-3 9H2" stroke="#FF3B30" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="sos-ot">Medical emergency (10177)</div><div class="sos-os">National ambulance service</div></div></a>
       </div>
       <div class="sos-big" onclick="triggerSOS()">
         <svg width="40" height="40" viewBox="0 0 24 24" fill="none"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke="#FF3B30" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><line x1="12" y1="9" x2="12" y2="13" stroke="#FF3B30" stroke-width="2.5" stroke-linecap="round"/><line x1="12" y1="17" x2="12.01" y2="17" stroke="#FF3B30" stroke-width="3" stroke-linecap="round"/></svg>
-        <div class="sos-big-t">Tap to send SOS alert</div>
-        <div class="sos-big-s">Notifies our team + your emergency contacts immediately</div>
+        <div class="sos-big-t">Log this alert</div>
+        <div class="sos-big-s">Records your location for Maobane Innovations to follow up with you afterward</div>
       </div>
       <div style="background:rgba(255,59,48,.07);border:1px solid rgba(255,59,48,.15);border-radius:12px;padding:12px 14px;margin-bottom:18px;display:flex;gap:10px;align-items:flex-start;">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10" stroke="#FF3B30" stroke-width="2"/><path d="M12 8v4M12 16h.01" stroke="#FF3B30" stroke-width="2" stroke-linecap="round"/></svg>
         <div style="font-size:12px;color:rgba(255,59,48,.9);line-height:1.6;">Current location: <strong id="sosLocation">Detecting…</strong></div>
       </div>
+      <div id="sosLogged" style="display:none;background:rgba(6,193,103,.08);border:1px solid rgba(6,193,103,.2);border-radius:12px;padding:12px 14px;margin-bottom:18px;font-size:12px;color:#06C167;line-height:1.6;"></div>
       <div class="sos-contacts">
         <div class="sos-lbl">Emergency contacts</div>
         <div style="text-align:center;color:var(--g40);font-size:13px;padding:16px 0;background:var(--s2);border-radius:14px;border:1px solid var(--b);">No emergency contacts added yet.<br>Add them in Settings.</div>
-      </div>
-      <div class="sos-lbl">Other options</div>
-      <div class="sos-options">
-        <a class="sos-opt" href="tel:10111" style="text-decoration:none;"><div class="sos-oi" style="background:rgba(39,110,241,.12);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="#276EF1" stroke-width="2"/></svg></div><div><div class="sos-ot">Call SAPS (10111)</div><div class="sos-os">South African Police Service</div></div></a>
-        <a class="sos-opt" href="tel:10177" style="text-decoration:none;"><div class="sos-oi" style="background:rgba(255,59,48,.1);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M22 12h-4l-3 9L9 3l-3 9H2" stroke="#FF3B30" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="sos-ot">Medical emergency (10177)</div><div class="sos-os">National ambulance service</div></div></a>
-        <div class="sos-opt" onclick="go('tracking')"><div class="sos-oi" style="background:var(--acl);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="#BB2235" stroke-width="2"/></svg></div><div><div class="sos-ot">Chat with EesyLoad safety</div><div class="sos-os">24/7 response · Usually &lt;2 min</div></div></div>
       </div>
     </div>
   </div>
@@ -2258,16 +2257,45 @@ function rateStar(n){
 }
 
 /* ─── SOS ──────────────────────────────── */
-function triggerSOS(){
-  if(!confirm('Send an SOS alert? This notifies our safety team and shares your live location.'))return;
+async function triggerSOS(){
+  if(!confirm('Log an SOS alert with your current location? This does not call emergency services — use the SAPS/ambulance buttons above for immediate danger.'))return;
   const el=document.getElementById('sosLocation');
+  const loggedEl=document.getElementById('sosLogged');
+  const finish = async (lat, lng, locationError) => {
+    try{
+      await sbLogSosAlert(lat, lng, locationError);
+      if(loggedEl){
+        loggedEl.style.display='';
+        loggedEl.textContent = locationError
+          ? 'Alert logged without a location fix. Maobane Innovations will follow up with you.'
+          : 'Alert logged with your location. Maobane Innovations will follow up with you.';
+      }
+    }catch(e){
+      console.error('Failed to log SOS alert', e);
+      if(loggedEl){
+        loggedEl.style.display='';
+        loggedEl.style.background='rgba(255,59,48,.08)';
+        loggedEl.style.borderColor='rgba(255,59,48,.2)';
+        loggedEl.style.color='#FF3B30';
+        loggedEl.textContent = 'Could not log the alert (' + e.message + '). Please call SAPS/ambulance above directly.';
+      }
+    }
+  };
   if(navigator.geolocation){
     navigator.geolocation.getCurrentPosition(
-      pos=>{if(el)el.textContent=pos.coords.latitude.toFixed(5)+', '+pos.coords.longitude.toFixed(5);},
-      ()=>{if(el)el.textContent='Unable to detect';}
+      pos=>{
+        if(el)el.textContent=pos.coords.latitude.toFixed(5)+', '+pos.coords.longitude.toFixed(5);
+        finish(pos.coords.latitude, pos.coords.longitude, false);
+      },
+      ()=>{
+        if(el)el.textContent='Unable to detect';
+        finish(null, null, true);
+      }
     );
+  }else{
+    if(el)el.textContent='Unable to detect';
+    finish(null, null, true);
   }
-  alert('SOS sent. Our safety team will contact you within 60 seconds.');
 }
 
 /* ─── WALLET / PAYMENTS ────────────────── */

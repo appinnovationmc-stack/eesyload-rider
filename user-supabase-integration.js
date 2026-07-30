@@ -291,3 +291,18 @@ async function sbVerifyPhoneChange(newPhone, token) {
   if (profileError) throw profileError;
   return data;
 }
+
+
+async function sbLogSosAlert(lat, lng, locationError) {
+  const user = await sbGetCurrentUser();
+  if (!user) throw new Error('Not signed in');
+  const bookingId = (typeof AppState !== 'undefined' && AppState.currentBookingId) ? AppState.currentBookingId : null;
+  const { error } = await sb.from('sos_alerts').insert({
+    rider_id: user.id,
+    booking_id: bookingId,
+    lat: lat,
+    lng: lng,
+    location_error: !!locationError
+  });
+  if (error) throw error;
+}
