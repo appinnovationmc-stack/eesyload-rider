@@ -268,9 +268,26 @@ async function openEditProfile() {
     const profile = await getRiderProfile();
     const nameInput = document.getElementById('editNameInput');
     const imgEl = document.getElementById('editAvatarImg');
+    const phoneEl = document.getElementById('editPhoneDisplay');
     if (nameInput) nameInput.value = (profile && profile.full_name) || '';
     if (imgEl) imgEl.src = (profile && profile.avatar_url) || '';
+    if (phoneEl) phoneEl.textContent = (profile && profile.phone) ? ('+' + profile.phone) : '—';
   } catch (err) {
     console.error('Failed to load profile for editing:', err);
   }
+}
+
+
+async function sbRequestPhoneChange(newPhone) {
+  const { error } = await sb.auth.updateUser({ phone: newPhone });
+  if (error) throw error;
+}
+
+async function sbVerifyPhoneChange(newPhone, token) {
+  const { data, error } = await sb.auth.verifyOtp({ phone: newPhone, token, type: 'phone_change' });
+  if (error) throw error;
+  const cleanPhone = newPhone.replace(/^\+/, '');
+  const { error: profileError } = await sb.from('profiles').update({ phone: cleanPhone }).eq('id', data.user.id);
+  if (profileError) throw profileError;
+  return data;
 }
