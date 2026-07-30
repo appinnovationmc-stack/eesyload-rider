@@ -1145,17 +1145,16 @@ footer .logo-svg{width:80px;height:auto;}
 
 <script>
 /* ─── CHAT ─────────────────────────────── */
-function sendMsg(chip){
+async function sendMsg(chip){
   const text=chip.textContent;
-  const msgs=document.getElementById('chatMsgs');
-  const now=new Date();
-  const t=now.getHours()+':'+(now.getMinutes()<10?'0':'')+now.getMinutes();
-  const div=document.createElement('div');
-  div.className='msg out';
-  div.innerHTML=`<div class="msg-bubble">${text}</div><div class="msg-time">${t} <span class="msg-tick"></span></div>`;
-  msgs.appendChild(div);
-  msgs.scrollTop=msgs.scrollHeight;
-  setTimeout(()=>{const r=document.createElement('div');r.className='msg in';const replies=['Got it!','On my way!','Sure, no problem.','Almost there!'];r.innerHTML=`<div class="msg-bubble">${replies[Math.floor(Math.random()*replies.length)]}</div><div class="msg-time">${t}</div>`;msgs.appendChild(r);msgs.scrollTop=msgs.scrollHeight;},1200);
+  if(!AppState.currentBookingId){alert('No active booking to message about.');return;}
+  try{
+    await sendChatMessage(AppState.currentBookingId, text);
+    // rendering happens via the realtime subscription, same as sendChatMsg()
+  }catch(e){
+    console.error('Could not send message', e);
+    alert('Could not send message: '+e.message);
+  }
 }
 async function sendChatMsg(){
   const inp=document.getElementById('chatInput');
