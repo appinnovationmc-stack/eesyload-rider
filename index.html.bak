@@ -186,7 +186,7 @@ body{background:var(--bg);transition:background .3s;overscroll-behavior:none;}
 .togt{width:20px;height:20px;background:var(--w);border-radius:50%;position:absolute;top:3px;left:3px;transition:transform .2s;box-shadow:0 1px 4px rgba(0,0,0,.4);}
 .tog.on .togt{transform:translateX(20px);}
 /* foot */
-.bk-foot{position:absolute;bottom:80px;left:0;right:0;padding:14px 20px 20px;background:linear-gradient(to top,#000 55%,transparent);}
+.bk-foot{position:absolute;bottom:0;left:0;right:0;padding:14px 20px 28px;background:linear-gradient(to top,#000 55%,transparent);}
 .pr-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
 .pr-l .pr-lbl{font-size:12px;color:var(--g60);}
 .pr-l .pr-sub{font-size:11px;color:var(--g80);margin-top:2px;}
@@ -515,8 +515,7 @@ body{background:var(--bg);transition:background .3s;overscroll-behavior:none;}
 
 .spl-logo-img{display:flex;align-items:center;justify-content:center;margin-bottom:8px;}
 .spl-logo-img svg{filter:drop-shadow(0 4px 20px rgba(187,34,53,.25));}
-.home-logo-img{display:flex;align-items:center;background:rgba(0,0,0,.65);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.1);border-radius:100px;padding:6px 14px 6px 8px;height:40px;box-sizing:border-box;}
-.home-logo-img .logo-svg{height:26px;width:auto;}
+.home-logo-img{display:flex;align-items:center;}
 .ob-logo-img{display:flex;align-items:center;margin-bottom:8px;}
 
 [data-theme="light"] 
@@ -558,7 +557,6 @@ footer .logo-svg{width:80px;height:auto;}
 .otp-foot{padding:0 20px 48px;}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://js.paystack.co/v1/inline.js"></script>
 <script src="user-supabase-integration.js"></script>
 </head>
 <body>
@@ -611,7 +609,6 @@ footer .logo-svg{width:80px;height:auto;}
       <span id="resend-btn" onclick="otpResend()" style="color:var(--acc);cursor:pointer;font-weight:600;">Resend</span>
       <span id="resend-timer" style="color:var(--g40);">in 0:30</span>
     </div>
-    <div id="otp-error-msg" style="color:#FF3B30;font-size:13px;text-align:center;margin-top:8px;min-height:16px;"></div>
   </div>
   <div class="otp-foot">
     <button class="cta" id="otp-verify-btn" onclick="otpVerify()">Verify →</button>
@@ -620,7 +617,7 @@ footer .logo-svg{width:80px;height:auto;}
 
   <!-- ══════ HOME ══════ -->
   <div id="home" class="scr">
-    <div class="map-wrap"><div id="hmap" style="width:100%;height:500px;"></div></div>
+    <div class="map-wrap"><canvas id="mc" width="393" height="500" style="width:100%;height:500px;display:block;"></canvas></div>
     <div class="home-top">
       <div class="home-logo-img"><svg viewBox="0 0 3743.25 3383.32" xmlns="http://www.w3.org/2000/svg" class="logo-svg"><path class="el1" d="M1749.93,107.24C1157,107.24,674.58,589.6,674.58,1182.59A1070.12,1070.12,0,0,0,722,1498.71c3.51-1.75,6.92-3.5,10.33-5.26q84.28-42.51,167.6-80.54A874.62,874.62,0,0,1,870,1216.09c-.48-11.1-.68-22.3-.68-33.5C869.35,697,1264.45,302,1749.93,302c420.23,0,772.68,295.87,859.94,690.19q104.15-5.26,197.5-5.55C2715.05,486.85,2276,107.24,1749.93,107.24Zm1068.15,950.6a.62.62,0,0,0,0-.59c-28.92,2.63-57.75,5.46-86.19,8.48-1.36.09-2.63.19-4,.39q-52.44,5.12-103.62,11.29a1.36,1.36,0,0,1,.1.88,857.76,857.76,0,0,1,6.23,104.3q0,43.83-4.28,86.48c-42,429-393.16,768.69-827,792.64q-24.54,1.47-49.38,1.46c-328.29,0-615.2-180.65-766.63-447.69L816.76,1716.57c156.41,272.3,428.61,470,748.82,525.51A1075.31,1075.31,0,0,0,1749.93,2258c591.63,0,1073.22-480.12,1075.36-1071.17.1-1.36.1-2.82.1-4.19A1055.46,1055.46,0,0,0,2818.08,1057.84Z"/><path d="M2818.08,1057.25c-28.92,2.63-57.75,5.46-86.19,8.48-1.36.09-2.63.19-4,.39q-52.44,5.12-103.62,11.29a1.36,1.36,0,0,1,.1.88,857.76,857.76,0,0,1,6.23,104.3q0,43.83-4.28,86.48c-42,429-393.16,768.69-827,792.64q-24.54,1.47-49.38,1.46c-328.29,0-615.2-180.65-766.63-447.69L816.76,1716.57c156.41,272.3,428.61,470,748.82,525.51A1075.31,1075.31,0,0,0,1749.93,2258c591.63,0,1073.22-480.12,1075.36-1071.17.1-1.36.1-2.82.1-4.19a1055.46,1055.46,0,0,0-7.31-124.75A.62.62,0,0,0,2818.08,1057.25Z"/><path d="M3368.32,1037s-253.69,35.89-562.51,151.67c-64.57,24.16-131.47,51.77-199,83.33-334.24,156.21-683.08,407.49-827,802.65a1097.27,1097.27,0,0,0-49.37,182.64h-1564s204.9-255.13,630.87-532.14q78.3-50.9,166.54-102.37c394-228.69,938.13-452.95,1641.08-544q51.13-6.66,103.52-12.33c1.37-.19,2.63-.29,4-.39,28.43-3.06,57.26-5.92,86.18-8.58,140.63-12.62,287.1-20,439.61-21,1-.09,1.95-.09,3-.09Q3304.2,1036,3368.32,1037Z"/><path class="el2" d="M870,1216.09q-68.5,22.65-137.7,48.5v228.86q84.28-42.51,167.6-80.54c146.47-66.9,290.51-123.87,430.94-172.08,1.46-.58,3-1.07,4.48-1.56,277.27-98.94,653.28-196.23,1134.57-244.34C2469.92,994.93,1724.81,931.72,870,1216.09Z"/><path class="el3" d="M3257.69,1036.51c-152.8,2.14-299.27,9.55-439.61,21.33q-43.53,3.65-86.19,7.89c28.44-3,57.27-5.85,86.19-8.48C2958.71,1044.79,3105.18,1037.48,3257.69,1036.51Z"/><path class="el4" d="M513.85,2780.37H228.5c10.51,47,50.48,75.72,108,75.72,40,0,68.71-11.92,94.65-36.45l58.19,63.09c-35.05,40-87.64,61-155.65,61-130.4,0-215.24-82-215.24-194.21,0-112.88,86.24-194.2,201.22-194.2,110.78,0,196.31,74.31,196.31,195.6C516,2759.34,514.55,2771.26,513.85,2780.37Zm-286.75-63.8H412.89c-7.71-47.68-43.47-78.53-92.55-78.53C270.56,2638,234.81,2668.19,227.1,2716.57Z"/><path class="el4" d="M956.24,2780.37H670.9c10.51,47,50.47,75.72,108,75.72,40,0,68.71-11.92,94.65-36.45l58.19,63.09c-35.05,40-87.63,61-155.64,61-130.41,0-215.24-82-215.24-194.21,0-112.88,86.24-194.2,201.22-194.2,110.77,0,196.31,74.31,196.31,195.6C958.35,2759.34,956.94,2771.26,956.24,2780.37Zm-286.75-63.8h185.8c-7.72-47.68-43.47-78.53-92.55-78.53C713,2638,677.21,2668.19,669.49,2716.57Z"/><path class="el4" d="M994.81,2903.06l36.45-78.52c33.65,21.74,84.83,36.46,131.11,36.46,50.48,0,69.41-13.33,69.41-34.35,0-61.71-227.86,1.39-227.86-149.34,0-71.52,64.5-122,174.57-122,51.89,0,109.38,11.92,145.13,32.94l-36.46,77.83c-37.15-21-74.31-28.05-108.67-28.05-49.07,0-70.11,15.43-70.11,35.06,0,64.5,227.86,2.1,227.86,150.74,0,70.11-65.2,119.89-178.08,119.89C1094.36,2943.73,1029.86,2926.2,994.81,2903.06Z"/><path class="el4" d="M1770.93,2560.92l-170.38,400.34c-36.45,91.14-88.33,118.48-156.34,118.48-38.56,0-80.63-12.62-105.17-34.35l40-77.83c16.82,14.73,40,23.85,61.69,23.85,30.15,0,47-13.33,61.7-47l1.4-3.5-163.36-380h112.88l105.87,255.91,106.57-255.91Z"/><path class="el4" d="M1815.79,2417.9h109.37v520.22H1815.79Z"/><path class="el4" d="M1998.77,2749.52c0-113.58,87.64-194.2,207.53-194.2s206.83,80.62,206.83,194.2-86.94,194.21-206.83,194.21S1998.77,2863.1,1998.77,2749.52Zm303.58,0c0-65.2-41.36-104.46-96-104.46s-96.75,39.26-96.75,104.46S2151.61,2854,2206.3,2854,2302.35,2814.73,2302.35,2749.52Z"/><path class="el4" d="M2813.47,2722.88v215.24H2711.11v-47c-20.33,34.35-59.59,52.58-115,52.58-88.35,0-140.92-49.08-140.92-114.28,0-66.61,47-112.88,161.95-112.88h86.94c0-47-28-74.31-86.94-74.31-40,0-81.33,13.31-108.67,35l-39.26-76.43c41.36-29.44,102.36-45.56,162.66-45.56C2746.87,2555.32,2813.47,2608.6,2813.47,2722.88Zm-109.37,96v-38.56h-75c-51.18,0-67.31,18.93-67.31,44.17,0,27.35,23.14,45.57,61.7,45.57C2659.92,2870.11,2691.48,2853.28,2704.1,2818.93Z"/><path class="el4" d="M3300.73,2417.9v520.22H3196.27v-43.47c-27.35,32.95-67.31,49.08-117.79,49.08-106.56,0-188.6-75.72-188.6-194.21s82-194.2,188.6-194.2c46.27,0,85.53,14.72,112.88,45.56v-183Zm-107.27,331.62c0-65.2-42.06-104.46-96.05-104.46-54.69,0-96.75,39.26-96.75,104.46S3042.72,2854,3097.41,2854C3151.4,2854,3193.46,2814.73,3193.46,2749.52Z"/><path class="el1" d="M396.38,3323.36q-2.13,0-2.13-2.28V3216.62q0-2.28,2.13-2.28H413a2.35,2.35,0,0,1,2.43,1.68l18.61,34.6q2.74,5.21,6.63,13.27t6.33,13.57h.61q2.43-5.49,6.32-13.57t6.64-13.27L479,3216a2.82,2.82,0,0,1,2.59-1.68h16.47a2,2,0,0,1,2.28,2.28v104.46a2,2,0,0,1-2.28,2.28H484.21q-2.13,0-2.13-2.28v-30.65q0-18,1.22-47.88l-.46-.15q-4.57,9.92-13.72,28.21l-13.42,26.06a2.64,2.64,0,0,1-2.6,1.69H441.52a2.66,2.66,0,0,1-2.6-1.69l-13.41-26.06q-9.15-18.32-13.73-28.21l-.46.15q1.23,29.89,1.23,47.88v30.65a2,2,0,0,1-2.29,2.28Z"/><path class="el1" d="M607.27,3323.36c-1.73,0-2.34-.86-1.84-2.59l36.6-104.6a2.56,2.56,0,0,1,2.45-1.83h17.37a2.4,2.4,0,0,1,2.45,1.83l36.59,104.6a2.16,2.16,0,0,1,.15.92c0,1.11-.66,1.67-2,1.67H684.12a2.34,2.34,0,0,1-2.59-1.82l-7.48-23H632.27l-7.47,23a2.48,2.48,0,0,1-2.59,1.82Zm45.58-88.89-15.39,47.42h31.41l-15.4-47.42Z"/><path class="el1" d="M808.08,3323.36c-1.43,0-2.13-.76-2.13-2.28V3216.62c0-1.52.7-2.28,2.13-2.28h14c1.43,0,2.14.76,2.14,2.28v44.23l38.12-45.14a4,4,0,0,1,2.74-1.37h17.84c1.32,0,2,.46,2,1.37a1.86,1.86,0,0,1-.62,1.37l-40.4,45.9,43.76,57.63a1.9,1.9,0,0,1,.61,1.38,1.13,1.13,0,0,1-.61,1,2.5,2.5,0,0,1-1.37.38H868.46a2.86,2.86,0,0,1-2.74-1.37l-33.86-45.59-7.62,8.23v36.45c0,1.52-.71,2.28-2.14,2.28Z"/><path class="el1" d="M1010.73,3321.08c0,1.52-.72,2.28-2.14,2.28h-14c-1.43,0-2.13-.76-2.13-2.28V3216.62c0-1.52.7-2.28,2.13-2.28h14c1.42,0,2.14.76,2.14,2.28Z"/><path class="el1" d="M1129.35,3323.36c-1.43,0-2.13-.76-2.13-2.28V3216.62c0-1.52.7-2.28,2.13-2.28h15.4a3.25,3.25,0,0,1,2.75,1.52l29.73,51.85q11,19.51,15.25,27.6l.46-.16q-1.37-19.52-1.38-41.32v-37.21a2,2,0,0,1,2.29-2.28h13.73a2,2,0,0,1,2.28,2.28v104.46a2,2,0,0,1-2.28,2.28h-15.4a2.87,2.87,0,0,1-2.6-1.52l-28.82-47.73a294.7,294.7,0,0,1-16.32-30l-.45.15q1.37,23.64,1.38,41.94v34.92c0,1.52-.72,2.28-2.14,2.28Z"/><path class="el1" d="M1387.5,3320.92a54.93,54.93,0,0,1-22,4.27,51.27,51.27,0,0,1-21.27-4.35,35.6,35.6,0,0,1-15.48-13.1q-5.79-8.77-5.8-21.58V3251.4q0-12.83,5.57-21.58a34,34,0,0,1,15-13,50.09,50.09,0,0,1,20.89-4.27,72.35,72.35,0,0,1,19.29,2.67,63,63,0,0,1,17.31,7.54,2.56,2.56,0,0,1,1.21,2,2.66,2.66,0,0,1-.45,1.22l-7.63,10.51a1.86,1.86,0,0,1-1.67,1.08,2.58,2.58,0,0,1-1.37-.47,51.62,51.62,0,0,0-26.84-7.16q-10.38,0-16.63,5.57t-6.24,16.39V3286q0,10.83,6.78,16.31t17.31,5.5a40.16,40.16,0,0,0,12.12-1.76,28.53,28.53,0,0,0,9.23-4.65v-23.18h-20.44c-1.43,0-2.13-.76-2.13-2.28V3264c0-1.52.7-2.28,2.13-2.28h36.29c1.43,0,2.14.76,2.14,2.28v42.85a3,3,0,0,1-.77,2.44A47.94,47.94,0,0,1,1387.5,3320.92Z"/><path class="el1" d="M1644,3323.36c-1.43,0-2.13-.76-2.13-2.28V3216.62c0-1.52.7-2.28,2.13-2.28h14.18c1.42,0,2.14.76,2.14,2.28v89.81h44.82c1.53,0,2.29.72,2.29,2.14v12.51a2,2,0,0,1-2.29,2.28Z"/><path class="el1" d="M1831.52,3321.08c0,1.52-.72,2.28-2.14,2.28h-14c-1.43,0-2.13-.76-2.13-2.28V3216.62c0-1.52.7-2.28,2.13-2.28h14c1.42,0,2.14.76,2.14,2.28Z"/><path class="el1" d="M2017.24,3229.13c0,1.43-.77,2.13-2.29,2.13h-48.64V3263h42.24c1.41,0,2.13.76,2.13,2.29v12.19c0,1.53-.72,2.3-2.13,2.3h-42.24v41.32c0,1.52-.71,2.28-2.14,2.28h-14q-2.13,0-2.13-2.28V3216.62q0-2.28,2.13-2.28H2015a2,2,0,0,1,2.29,2.28Z"/><path class="el1" d="M2193,3306.58c1.52,0,2.29.72,2.29,2.14v12.36a2,2,0,0,1-2.29,2.28h-65.26c-1.43,0-2.13-.76-2.13-2.28V3216.62c0-1.52.7-2.28,2.13-2.28h63.13a2,2,0,0,1,2.28,2.28V3229c0,1.43-.76,2.13-2.28,2.13h-46.81v28.51h42.85a2,2,0,0,1,2.28,2.29v12.2a2,2,0,0,1-2.28,2.29h-42.85v30.18Z"/><path class="el1" d="M2498.3,3306.58c1.52,0,2.29.72,2.29,2.14v12.36a2,2,0,0,1-2.29,2.28H2433c-1.43,0-2.13-.76-2.13-2.28V3216.62c0-1.52.7-2.28,2.13-2.28h63.13a2,2,0,0,1,2.28,2.28V3229c0,1.43-.76,2.13-2.28,2.13h-46.81v28.51h42.85a2,2,0,0,1,2.28,2.29v12.2a2,2,0,0,1-2.28,2.29h-42.85v30.18Z"/><path class="el1" d="M2679.13,3306.58c1.53,0,2.3.72,2.3,2.14v12.36a2,2,0,0,1-2.3,2.28h-65.26q-2.13,0-2.13-2.28V3216.62q0-2.28,2.13-2.28H2677a2,2,0,0,1,2.29,2.28V3229c0,1.43-.76,2.13-2.29,2.13h-46.81v28.51H2673a2,2,0,0,1,2.28,2.29v12.2a2,2,0,0,1-2.28,2.29h-42.85v30.18Z"/><path class="el1" d="M2862.73,3310.78a32.94,32.94,0,0,1-15.11,10.91,60.21,60.21,0,0,1-21,3.5,55.71,55.71,0,0,1-20.2-3.5,72.4,72.4,0,0,1-18.68-11.14,2.66,2.66,0,0,1-.93-1.83,2.16,2.16,0,0,1,.47-1.36l7.62-10.69a1.94,1.94,0,0,1,1.68-.91,2.2,2.2,0,0,1,1.37.46,72,72,0,0,0,14.87,8.54,40.29,40.29,0,0,0,14.56,3,29.85,29.85,0,0,0,15.62-3.89,12.34,12.34,0,0,0,6.49-11.21,11.05,11.05,0,0,0-3.21-8.3,21.08,21.08,0,0,0-8.23-4.81,117.51,117.51,0,0,0-13.26-3.35q-15.87-3.36-26.46-10.75t-10.59-22.65q0-15.09,11.5-22.72t29.2-7.62a56.6,56.6,0,0,1,18.15,2.82,72.32,72.32,0,0,1,17.69,9.23,1.87,1.87,0,0,1,1.06,1.67,2.72,2.72,0,0,1-.45,1.37l-7.32,10.53a2.18,2.18,0,0,1-1.68.91,3.5,3.5,0,0,1-1.52-.46,52.64,52.64,0,0,0-27.3-8.84q-9.75,0-15.24,3.59a11.15,11.15,0,0,0-5.49,9.83,10,10,0,0,0,2.81,7.39,20.1,20.1,0,0,0,7.48,4.5,109.57,109.57,0,0,0,12.89,3.51,128.47,128.47,0,0,1,19.66,5.86,33.93,33.93,0,0,1,13.65,10.08c3.71,4.51,5.57,10.49,5.57,17.9S2866.48,3305.85,2862.73,3310.78Z"/><path class="el1" d="M3002.84,3323.36a2,2,0,0,1-2.28-2.28v-38l-35.07-66a5.3,5.3,0,0,1-.31-1.22c0-1,.66-1.52,2-1.52h16a2.35,2.35,0,0,1,2.43,1.68l24.25,50.16L3034,3216a2.46,2.46,0,0,1,2.59-1.68h16c1.21,0,1.82.51,1.82,1.52l-.3,1.22-34.92,66.33v37.67a2,2,0,0,1-2.29,2.28Z"/><path class="el4" d="M3525.22,2497.29a112.57,112.57,0,1,1,112.57-112.57A112.69,112.69,0,0,1,3525.22,2497.29Zm0-211.23a98.67,98.67,0,1,0,98.67,98.66A98.77,98.77,0,0,0,3525.22,2286.06Z"/></svg></div>
       <button class="ibtn" onclick="go('profile')">
@@ -633,24 +630,40 @@ footer .logo-svg{width:80px;height:auto;}
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="8" stroke="#888" stroke-width="2"/><path d="M21 21l-3.5-3.5" stroke="#888" stroke-width="2" stroke-linecap="round"/></svg>
         <span class="where-t">Where's the pickup?</span>
       </div>
-      <div class="tile-row" id="tileRow"></div>
-      <div class="row" onclick="useCurrentLocationForPickup()" id="useCurrentLocationRow">
-        <div class="ri"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="#06C167" stroke-width="2"/><circle cx="12" cy="12" r="2.5" fill="#06C167"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3" stroke="#06C167" stroke-width="2" stroke-linecap="round"/></svg></div>
-        <div class="rb"><div class="rt" id="useCurrentLocationLabel">Use current location</div></div>
-        <svg class="chev" width="8" height="13" viewBox="0 0 8 14" fill="none"><path d="M1 1l6 6-6 6" stroke="#444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div class="tile-row">
+        <div class="tile on" onclick="selTile(this)">
+          <div class="ti"><svg width="40" height="24" viewBox="0 0 50 28" fill="none"><rect x="14" y="3" width="32" height="16" rx="2.5" stroke="white" stroke-width="1.8"/><path d="M3 13h11l5-10h6" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 13v8h47v-8" stroke="white" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="24" r="4" stroke="white" stroke-width="1.8"/><circle cx="39" cy="24" r="4" stroke="white" stroke-width="1.8"/></svg></div>
+          <span class="tl">Bakkie</span>
+        </div>
+        <div class="tile" onclick="selTile(this)">
+          <div class="ti"><svg width="40" height="24" viewBox="0 0 52 28" fill="none"><rect x="2" y="4" width="32" height="16" rx="2" stroke="white" stroke-width="1.8"/><path d="M34 9h12l5 8v4H34V9z" stroke="white" stroke-width="1.8" stroke-linejoin="round"/><circle cx="11" cy="24" r="4" stroke="white" stroke-width="1.8"/><circle cx="26" cy="24" r="4" stroke="white" stroke-width="1.8"/><circle cx="43" cy="24" r="4" stroke="white" stroke-width="1.8"/></svg></div>
+          <span class="tl">Truck</span>
+        </div>
+        <div class="tile" onclick="selTile(this)">
+          <div class="ti"><svg width="40" height="24" viewBox="0 0 50 28" fill="none"><path d="M2 20V11c0-2 1.5-4 3-4L22 4h22a3 3 0 013 3v13" stroke="white" stroke-width="1.8" stroke-linecap="round"/><path d="M2 20h46" stroke="white" stroke-width="1.8" stroke-linecap="round"/><rect x="6" y="7" width="9" height="7" rx="1.5" stroke="white" stroke-width="1.5"/><rect x="18" y="7" width="9" height="7" rx="1.5" stroke="white" stroke-width="1.5"/><circle cx="11" cy="24" r="4" stroke="white" stroke-width="1.8"/><circle cx="37" cy="24" r="4" stroke="white" stroke-width="1.8"/></svg></div>
+          <span class="tl">Van</span>
+        </div>
+        <div class="tile" onclick="selTile(this)">
+          <div class="ti"><svg width="36" height="24" viewBox="0 0 42 26" fill="none"><circle cx="9" cy="20" r="5.5" stroke="white" stroke-width="1.8"/><circle cx="33" cy="20" r="5.5" stroke="white" stroke-width="1.8"/><path d="M14.5 20H27.5M21 20V9" stroke="white" stroke-width="1.8" stroke-linecap="round"/><path d="M15 9h12l4 6H11l4-6z" stroke="white" stroke-width="1.8" stroke-linejoin="round"/><path d="M21 9V4l5-3" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+          <span class="tl">Moto</span>
+        </div>
+        <div class="tile" onclick="selTile(this)">
+          <div class="ti"><svg width="34" height="24" viewBox="0 0 38 26" fill="none"><circle cx="12" cy="7" r="4" stroke="white" stroke-width="1.8"/><path d="M4 24c0-4.4 3.6-7 8-7s8 2.6 8 7" stroke="white" stroke-width="1.8" stroke-linecap="round"/><circle cx="27" cy="6" r="3.2" stroke="white" stroke-width="1.6"/><path d="M20 24c0-3.5 3-6 7-6" stroke="white" stroke-width="1.6" stroke-linecap="round"/></svg></div>
+          <span class="tl">Helpers</span>
+        </div>
       </div>
       <div class="sec-lbl">Recents</div>
-      <div class="row" onclick="useOrAddSavedAddress('Home')">
+      <div class="row" onclick="go('booking')">
         <div class="ri"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke="#888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><polyline points="9,22 9,12 15,12 15,22" stroke="#888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <div class="rb"><div class="rt">Home</div><div class="rs" id="savedAddrHomeSub" style="font-size:12px;color:#888;margin-top:2px;">Tap to add</div></div>
+        <div class="rb"><div class="rt">Home</div></div>
         <svg class="chev" width="8" height="13" viewBox="0 0 8 14" fill="none"><path d="M1 1l6 6-6 6" stroke="#444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </div>
-      <div class="row" onclick="useOrAddSavedAddress('Work')">
+      <div class="row" onclick="go('booking')">
         <div class="ri"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="2" y="7" width="20" height="14" rx="2" stroke="#888" stroke-width="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2" stroke="#888" stroke-width="2"/></svg></div>
-        <div class="rb"><div class="rt">Work</div><div class="rs" id="savedAddrWorkSub" style="font-size:12px;color:#888;margin-top:2px;">Tap to add</div></div>
+        <div class="rb"><div class="rt">Work</div></div>
         <svg class="chev" width="8" height="13" viewBox="0 0 8 14" fill="none"><path d="M1 1l6 6-6 6" stroke="#444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </div>
-      <div class="row" onclick="addCustomSavedAddress()">
+      <div class="row" onclick="go('booking')">
         <div class="ri"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z" stroke="#888" stroke-width="2"/><circle cx="12" cy="10" r="3" stroke="#888" stroke-width="2"/></svg></div>
         <div class="rb"><div class="rt">Add new address</div></div>
         <svg class="chev" width="8" height="13" viewBox="0 0 8 14" fill="none"><path d="M1 1l6 6-6 6" stroke="#444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -666,7 +679,7 @@ footer .logo-svg{width:80px;height:auto;}
 
   <!-- ══════ BOOKING ══════ -->
   <div id="booking" class="scr">
-    <div class="scroll" style="padding-bottom:260px;">
+    <div class="scroll" style="padding-bottom:150px;">
       <div class="bk-hdr">
         <button class="back" onclick="go('home')" style="margin-bottom:18px;"><svg width="10" height="17" viewBox="0 0 10 18" fill="none"><path d="M9 1L1 9l8 8" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         <div class="bk-title">Book a load</div>
@@ -693,10 +706,47 @@ footer .logo-svg{width:80px;height:auto;}
         <button class="sched-btn" onclick="go('business')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="2"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg> Business</button>
       </div>
       <div class="vc-lbl">Choose vehicle</div>
-      <div class="vcs" id="vcRow"></div>
+      <div class="vcs">
+        <div class="vc" data-price="65" data-name="Moto" onclick="selV(this)">
+          <div class="vc-ill"><svg width="52" height="28" viewBox="0 0 52 28" fill="none"><circle cx="10" cy="22" r="5" stroke="white" stroke-width="1.8"/><circle cx="36" cy="22" r="5" stroke="white" stroke-width="1.8"/><path d="M4 22V14L10 4h8l5 8" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M17 4h12a2 2 0 012 2v9H4" stroke="white" stroke-width="1.8" stroke-linecap="round"/><path d="M31 15h14l-3-9H31v9z" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="vc-n">Moto</div><div class="vc-c">Up to 20 kg</div><div class="vc-p">From R65</div>
+        </div>
+        <div class="vc sel" data-price="110" data-name="Bakkie" onclick="selV(this)">
+          <div class="vcb">POPULAR</div>
+          <div class="vc-ill"><svg width="58" height="28" viewBox="0 0 62 28" fill="none"><rect x="16" y="3" width="34" height="17" rx="2.5" stroke="white" stroke-width="1.8"/><path d="M3 14h13l5-11h7" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 14v7h58v-7" stroke="white" stroke-width="1.8" stroke-linecap="round"/><circle cx="13" cy="24" r="4" stroke="white" stroke-width="1.8"/><circle cx="47" cy="24" r="4" stroke="white" stroke-width="1.8"/></svg></div>
+          <div class="vc-n">Bakkie</div><div class="vc-c">Up to 500 kg</div><div class="vc-p">From R110</div>
+        </div>
+        <div class="vc" data-price="185" data-name="Van" onclick="selV(this)">
+          <div class="vc-ill"><svg width="54" height="28" viewBox="0 0 56 28" fill="none"><path d="M2 20V11c0-2 2-4 3.5-5L24 4h26a3 3 0 013 3v13" stroke="white" stroke-width="1.8" stroke-linecap="round"/><path d="M2 20h52" stroke="white" stroke-width="1.8" stroke-linecap="round"/><rect x="6" y="7" width="9" height="7" rx="1.5" stroke="white" stroke-width="1.5"/><rect x="18" y="7" width="9" height="7" rx="1.5" stroke="white" stroke-width="1.5"/><circle cx="12" cy="24" r="4" stroke="white" stroke-width="1.8"/><circle cx="42" cy="24" r="4" stroke="white" stroke-width="1.8"/></svg></div>
+          <div class="vc-n">Van</div><div class="vc-c">Up to 1.5 T</div><div class="vc-p">From R185</div>
+        </div>
+        <div class="vc" data-price="320" data-name="4-Ton" onclick="selV(this)">
+          <div class="vc-ill"><svg width="58" height="28" viewBox="0 0 62 28" fill="none"><rect x="2" y="4" width="36" height="17" rx="2" stroke="white" stroke-width="1.8"/><path d="M38 10h16l5 8v4H38V10z" stroke="white" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="24" r="4" stroke="white" stroke-width="1.8"/><circle cx="28" cy="24" r="4" stroke="white" stroke-width="1.8"/><circle cx="50" cy="24" r="4" stroke="white" stroke-width="1.8"/><rect x="6" y="7" width="11" height="8" rx="1.5" stroke="white" stroke-width="1.5"/></svg></div>
+          <div class="vc-n">4-Ton</div><div class="vc-c">Up to 4 T</div><div class="vc-p">From R320</div>
+        </div>
+        <div class="vc" data-price="680" data-name="8-Ton" onclick="selV(this)">
+          <div class="vc-ill"><svg width="58" height="28" viewBox="0 0 62 28" fill="none"><rect x="2" y="2" width="58" height="20" rx="2" stroke="white" stroke-width="1.8"/><rect x="8" y="6" width="14" height="10" rx="1" stroke="white" stroke-width="1.5"/><rect x="26" y="6" width="14" height="10" rx="1" stroke="white" stroke-width="1.5"/><rect x="44" y="6" width="12" height="10" rx="1" stroke="white" stroke-width="1.5"/><circle cx="10" cy="25" r="3" stroke="white" stroke-width="1.8"/><circle cx="26" cy="25" r="3" stroke="white" stroke-width="1.8"/><circle cx="42" cy="25" r="3" stroke="white" stroke-width="1.8"/><circle cx="54" cy="25" r="3" stroke="white" stroke-width="1.8"/></svg></div>
+          <div class="vc-n">8-Ton</div><div class="vc-c">Up to 8 T</div><div class="vc-p">From R680</div>
+        </div>
+      </div>
       <div style="padding:18px 20px 0;">
         <div class="vc-lbl" style="padding:0;margin-bottom:14px;">Add-ons</div>
-        <div id="addonRow"></div>
+        <div class="addon-row" data-price="80" onclick="togAddon(this)">
+          <div class="addon-l"><div class="addon-ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="7" r="3" stroke="white" stroke-width="2"/><path d="M3 21c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="white" stroke-width="2" stroke-linecap="round"/><circle cx="17" cy="7" r="3" stroke="white" stroke-width="2"/><path d="M14 21c0-2 1.5-5 6-5" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div><div><div class="addon-n">Loading helpers</div><div class="addon-s">+R80 · 2 trained movers</div></div></div>
+          <div class="tog"><div class="togt"></div></div>
+        </div>
+        <div class="addon-row" data-price="45" onclick="togAddon(this)">
+          <div class="addon-l"><div class="addon-ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M21 8H3a1 1 0 00-1 1v11a1 1 0 001 1h18a1 1 0 001-1V9a1 1 0 00-1-1z" stroke="white" stroke-width="2"/><path d="M9 8V5a1 1 0 011-1h4a1 1 0 011 1v3" stroke="white" stroke-width="2"/></svg></div><div><div class="addon-n">Packing blankets</div><div class="addon-s">+R45 · Straps & wraps included</div></div></div>
+          <div class="tog"><div class="togt"></div></div>
+        </div>
+        <div class="addon-row" data-price="30" onclick="togAddon(this)">
+          <div class="addon-l"><div class="addon-ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="addon-n">Cargo insurance</div><div class="addon-s">+R30 · Cover up to R10,000</div></div></div>
+          <div class="tog on"><div class="togt"></div></div>
+        </div>
+        <div class="addon-row" data-price="20" onclick="togAddon(this)">
+          <div class="addon-l"><div class="addon-ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="4" y1="22" x2="4" y2="15" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div><div><div class="addon-n">Priority matching</div><div class="addon-s">+R20 · Skip the queue</div></div></div>
+          <div class="tog"><div class="togt"></div></div>
+        </div>
       </div>
     </div>
     <div class="bk-foot">
@@ -716,7 +766,7 @@ footer .logo-svg{width:80px;height:auto;}
 
   <!-- ══════ CONFIRM ══════ -->
   <div id="confirm" class="scr" style="justify-content:flex-end;">
-    <div style="flex:1;background:#080808;" onclick="closeConfirmIfSafe()"></div>
+    <div style="flex:1;background:#080808;" onclick="go('booking')"></div>
     <div class="cf-inner">
       <div class="bsh" style="margin-bottom:20px;"></div>
       <div class="cf-t">Confirm your load</div>
@@ -735,7 +785,7 @@ footer .logo-svg{width:80px;height:auto;}
         </div>
         <svg width="8" height="13" viewBox="0 0 8 14" fill="none"><path d="M1 1l6 6-6 6" stroke="#555" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </div>
-      <button class="cta" onclick="payAndFindDriver()" style="margin-bottom:12px;">Find my driver <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="black" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <button class="cta" onclick="findDriver()" style="margin-bottom:12px;">Find my driver <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="black" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
       <div style="text-align:center;font-size:14px;color:var(--g60);padding:10px;cursor:pointer;" onclick="go('booking')">← Edit booking</div>
     </div>
   </div>
@@ -763,24 +813,24 @@ footer .logo-svg{width:80px;height:auto;}
   <!-- ══════ TRACKING ══════ -->
   <div id="tracking" class="scr" style="flex-direction:column;">
     <div class="trk-map">
-      <div id="trkmap" style="position:absolute;inset:0;width:100%;height:100%;"></div>
+      <canvas id="tc" width="393" height="340" style="position:absolute;inset:0;width:100%;height:100%;"></canvas>
       <div class="trk-top">
         <button class="gbtn" onclick="go('home')"><svg width="10" height="16" viewBox="0 0 10 18" fill="none"><path d="M9 1L1 9l8 8" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         <button class="gbtn" onclick="shareETA()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="18" cy="5" r="3" stroke="white" stroke-width="2"/><circle cx="6" cy="12" r="3" stroke="white" stroke-width="2"/><circle cx="18" cy="19" r="3" stroke="white" stroke-width="2"/><path d="M8.6 13.7l6.8 3.6M15.4 6.7L8.6 10.3" stroke="white" stroke-width="2" stroke-linecap="round"/></svg> Share ETA</button>
       </div>
-      <div class="eta-pill"><div class="eta-t" id="trkEtaText">--</div><div class="eta-l">Driver arriving</div></div>
+      <div class="eta-pill"><div class="eta-t">8 min</div><div class="eta-l">Driver arriving</div></div>
     </div>
     <div class="trk-sheet">
       <div class="bsh"></div>
       <div class="drv-card">
-        <div class="drv-av"><img id="trkDriverAvatarImg" style="display:none;width:100%;height:100%;object-fit:cover;border-radius:50%;" /><svg id="trkDriverAvatarFallback" width="26" height="26" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" fill="#555"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" fill="#555"/></svg></div>
+        <div class="drv-av"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" fill="#555"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" fill="#555"/></svg></div>
         <div class="drv-info">
           <div class="drv-n" id="trkDriverName">Your Driver</div>
           <div class="drv-v" id="trkDriverVehicle">Assigned vehicle</div>
           <div class="drv-star"><svg width="12" height="11" viewBox="0 0 24 22"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="#FFC043"/></svg><span class="dsv" id="trkDriverRating">—</span><span style="font-size:11px;color:var(--g60)"> · <span id="trkDriverLoads">—</span> loads</span></div>
         </div>
         <div class="drv-btns">
-          <div class="dact" onclick="callDriver()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8 19.79 19.79 0 01.07 2.22 2 2 0 012 .04h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0122 16.92z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="dact" onclick="alert('Calling your driver...')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8 19.79 19.79 0 01.07 2.22 2 2 0 012 .04h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0122 16.92z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
           <div class="dact" onclick="go('chat')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         </div>
       </div>
@@ -855,7 +905,7 @@ footer .logo-svg{width:80px;height:auto;}
     <div class="prof-hdr">
       <div class="prof-top">
         <div class="prof-av"><svg width="32" height="32" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" fill="#555"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" fill="#555"/></svg></div>
-        <div><div class="prof-n" id="profName">Your Name</div><div class="prof-p" id="profPhone"></div></div>
+        <div><div class="prof-n">Your Name</div><div class="prof-p"></div></div>
       </div>
       <div class="prof-stats">
         <div class="pst"><div class="psv" id="profLoadsCount">0</div><div class="psl">Loads</div></div>
@@ -1026,12 +1076,6 @@ footer .logo-svg{width:80px;height:auto;}
       <div class="ref-code-box">
         <div class="ref-code" id="ref-code">—</div>
         <div class="ref-code-sub">Your unique referral code</div>
-      </div>
-      <div class="ref-code-box" id="enterCodeBox">
-        <div style="font-size:13px;font-weight:700;margin-bottom:10px;">Have a friend's code?</div>
-        <input id="friendCodeInput" placeholder="Enter code" style="width:100%;background:var(--s2);border:1px solid var(--b);border-radius:10px;padding:10px 12px;font-family:var(--f);font-size:14px;color:var(--w);margin-bottom:10px;">
-        <button class="cta" onclick="submitFriendCode()" style="width:100%;">Apply code</button>
-        <div id="friendCodeMsg" style="font-size:12px;margin-top:8px;"></div>
         <button class="ref-copy" onclick="copyCode(this)">Copy</button>
       </div>
     </div>
@@ -1157,22 +1201,20 @@ function sendMsg(chip){
   msgs.scrollTop=msgs.scrollHeight;
   setTimeout(()=>{const r=document.createElement('div');r.className='msg in';const replies=['Got it!','On my way!','Sure, no problem.','Almost there!'];r.innerHTML=`<div class="msg-bubble">${replies[Math.floor(Math.random()*replies.length)]}</div><div class="msg-time">${t}</div>`;msgs.appendChild(r);msgs.scrollTop=msgs.scrollHeight;},1200);
 }
-async function sendChatMsg(){
+function sendChatMsg(){
   const inp=document.getElementById('chatInput');
   const text=inp.value.trim();
   if(!text)return;
-  if(!AppState.currentBookingId){alert('No active booking to message about.');return;}
+  const msgs=document.getElementById('chatMsgs');
+  const now=new Date();
+  const t=now.getHours()+':'+(now.getMinutes()<10?'0':'')+now.getMinutes();
+  const div=document.createElement('div');
+  div.className='msg out';
+  div.innerHTML=`<div class="msg-bubble">${text}</div><div class="msg-time">${t} <span class="msg-tick"></span></div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop=msgs.scrollHeight;
   inp.value='';
-  try{
-    await sendChatMessage(AppState.currentBookingId, text);
-    // rendering happens via the realtime subscription (renderChatHeader's
-    // subscribeToChatMessages), so the message appears identically whether
-    // it's mine or the driver's, and reloading the screen shows the same history.
-  }catch(e){
-    console.error('Could not send message', e);
-    alert('Could not send message: '+e.message);
-    inp.value=text; // give the text back so nothing is lost
-  }
+  setTimeout(()=>{const r=document.createElement('div');r.className='msg in';r.innerHTML=`<div class="msg-bubble">Thanks, I'll be there shortly!</div><div class="msg-time">${t}</div>`;msgs.appendChild(r);msgs.scrollTop=msgs.scrollHeight;},1000);
 }
 
 /* ─── CALENDAR ──────────────────────────── */
@@ -1205,39 +1247,16 @@ function selTime(el){
 function selPlan(el){document.querySelectorAll('.plan-card').forEach(c=>c.classList.remove('sel'));el.classList.add('sel');}
 
 /* ─── REFERRAL CODE COPY ───────────────── */
-async function renderRefCode(){
+function renderRefCode(){
   const el=document.getElementById('ref-code');
   if(!el)return;
-  el.textContent='...';
-  try{
-    const profile=await getMyReferralCode();
-    el.textContent=profile.referral_code||'—';
-    const enterBox=document.getElementById('enterCodeBox');
-    if(enterBox){
-      enterBox.style.display=profile.referred_by?'none':'block';
-    }
-  }catch(e){
-    console.error('Could not load referral code',e);
-    el.textContent='—';
+  let code=localStorage.getItem('el-ref-code');
+  if(!code){
+    // TODO: replace with server-issued code once auth/backend is wired in
+    code='EL-'+Math.random().toString(36).slice(2,8).toUpperCase();
+    localStorage.setItem('el-ref-code',code);
   }
-}
-
-async function submitFriendCode(){
-  const input=document.getElementById('friendCodeInput');
-  const msg=document.getElementById('friendCodeMsg');
-  if(!input||!input.value.trim())return;
-  const code=input.value.trim().toUpperCase();
-  if(msg){msg.style.color='var(--g60)';msg.textContent='Checking code…';}
-  try{
-    await applyReferralCode(code);
-    if(msg){msg.style.color='#06C167';msg.textContent='Referral applied! Thanks for joining through a friend.';}
-    setTimeout(()=>{
-      const enterBox=document.getElementById('enterCodeBox');
-      if(enterBox)enterBox.style.display='none';
-    },1500);
-  }catch(e){
-    if(msg){msg.style.color='#FF3B30';msg.textContent=e.message||'Could not apply that code.';}
-  }
+  el.textContent=code;
 }
 function copyCode(btn){
   const code=document.getElementById('ref-code');
@@ -1287,262 +1306,15 @@ function setTheme(t){
 }
 
 let _homeRaf=null;
-let _mapsReadyPromise=null;
-function loadGoogleMaps(){
-  if(_mapsReadyPromise)return _mapsReadyPromise;
-  _mapsReadyPromise=new Promise((resolve)=>{
-    if(window.google&&window.google.maps){resolve();return;}
-    const s=document.createElement('script');
-    s.src='https://maps.googleapis.com/maps/api/js?key=AIzaSyBAUx4OpJivUYKzeh0Ol7zFjIlHY4czQQM&v=weekly&libraries=places';
-    s.async=true;
-    s.onload=()=>resolve();
-    document.head.appendChild(s);
-  });
-  return _mapsReadyPromise;
-}
-let homeMap=null,homeMarker=null,homeWatchId=null;
-async function initHomeMap(){
-  await loadGoogleMaps();
-  const el=document.getElementById('hmap');
-  if(!el)return;
-  const fallback={lat:-25.7479,lng:28.2293}; // Pretoria fallback
-  if(!homeMap){
-    homeMap=new google.maps.Map(el,{center:fallback,zoom:15,disableDefaultUI:true,zoomControl:true});
-    homeMarker=new google.maps.Marker({map:homeMap,position:fallback});
-  }
-  if(!navigator.geolocation)return;
-  navigator.geolocation.getCurrentPosition(pos=>{
-    const p={lat:pos.coords.latitude,lng:pos.coords.longitude};
-    homeMap.setCenter(p);homeMarker.setPosition(p);
-  },()=>{});
-  if(homeWatchId)navigator.geolocation.clearWatch(homeWatchId);
-  homeWatchId=navigator.geolocation.watchPosition(pos=>{
-    const p={lat:pos.coords.latitude,lng:pos.coords.longitude};
-    homeMap.setCenter(p);homeMarker.setPosition(p);
-  },()=>{},{enableHighAccuracy:true,maximumAge:5000});
-}
-function stopHomeMapWatch(){
-  if(homeWatchId){navigator.geolocation.clearWatch(homeWatchId);homeWatchId=null;}
-}
-
-let _cachedSavedAddresses=[];
-async function renderSavedAddressesUI(){
-  try{
-    _cachedSavedAddresses=await getSavedAddresses();
-  }catch(e){
-    console.error('Could not load saved addresses',e);
-    return;
-  }
-  const home=_cachedSavedAddresses.find(a=>a.label==='Home');
-  const work=_cachedSavedAddresses.find(a=>a.label==='Work');
-  const homeSub=document.getElementById('savedAddrHomeSub');
-  const workSub=document.getElementById('savedAddrWorkSub');
-  if(homeSub)homeSub.textContent=home?home.formatted_address:'Tap to add';
-  if(workSub)workSub.textContent=work?work.formatted_address:'Tap to add';
-}
-
-function _geocodeAddressText(addressText){
-  return new Promise(async(resolve,reject)=>{
-    await loadGoogleMaps();
-    const geocoder=new google.maps.Geocoder();
-    geocoder.geocode({address:addressText},(results,status)=>{
-      if(status==='OK'&&results&&results[0]){
-        resolve({
-          formatted_address:results[0].formatted_address,
-          lat:results[0].geometry.location.lat(),
-          lng:results[0].geometry.location.lng()
-        });
-      }else{
-        reject(new Error('Could not find that address'));
-      }
-    });
-  });
-}
-
-async function useOrAddSavedAddress(label){
-  const existing=_cachedSavedAddresses.find(a=>a.label===label);
-  if(existing){
-    AppState.pickup=existing.formatted_address;
-    AppState.pickupLat=existing.lat;
-    AppState.pickupLng=existing.lng;
-    go('booking');
-    setTimeout(()=>{
-      const pickupInput=document.getElementById('pickupInput');
-      if(pickupInput)pickupInput.value=existing.formatted_address;
-    },50);
-    return;
-  }
-  const typed=prompt('Enter your '+label+' address:');
-  if(!typed)return;
-  try{
-    const geo=await _geocodeAddressText(typed);
-    await saveAddress(label,geo.formatted_address,geo.lat,geo.lng);
-    await renderSavedAddressesUI();
-    AppState.pickup=geo.formatted_address;
-    AppState.pickupLat=geo.lat;
-    AppState.pickupLng=geo.lng;
-    go('booking');
-    setTimeout(()=>{
-      const pickupInput=document.getElementById('pickupInput');
-      if(pickupInput)pickupInput.value=geo.formatted_address;
-    },50);
-  }catch(e){
-    alert('Could not save that address. Please check it and try again.');
-  }
-}
-
-async function addCustomSavedAddress(){
-  const label=prompt('Name this address (e.g. "Gym", "Mom\'s house"):');
-  if(!label)return;
-  const typed=prompt('Enter the address:');
-  if(!typed)return;
-  try{
-    const geo=await _geocodeAddressText(typed);
-    await saveAddress(label,geo.formatted_address,geo.lat,geo.lng);
-    await renderSavedAddressesUI();
-    alert('Address saved.');
-  }catch(e){
-    alert('Could not save that address. Please check it and try again.');
-  }
-}
-
-async function useCurrentLocationForPickup(){
-  const labelEl=document.getElementById('useCurrentLocationLabel');
-  if(!navigator.geolocation){
-    alert('Location services are not available on this device.');
-    return;
-  }
-  if(labelEl)labelEl.textContent='Detecting your location…';
-  navigator.geolocation.getCurrentPosition(async(pos)=>{
-    const p={lat:pos.coords.latitude,lng:pos.coords.longitude};
-    try{
-      await loadGoogleMaps();
-      const geocoder=new google.maps.Geocoder();
-      geocoder.geocode({location:p},(results,status)=>{
-        if(status==='OK'&&results&&results[0]){
-          const address=results[0].formatted_address;
-          AppState.pickup=address;
-          AppState.pickupLat=p.lat;
-          AppState.pickupLng=p.lng;
-          if(labelEl)labelEl.textContent='Use current location';
-          go('booking');
-          setTimeout(()=>{
-            const pickupInput=document.getElementById('pickupInput');
-            if(pickupInput)pickupInput.value=address;
-          },50);
-        }else{
-          if(labelEl)labelEl.textContent='Use current location';
-          alert('Could not detect your address. Please type it manually.');
-        }
-      });
-    }catch(e){
-      if(labelEl)labelEl.textContent='Use current location';
-      alert('Could not detect your location.');
-    }
-  },()=>{
-    if(labelEl)labelEl.textContent='Use current location';
-    alert('Location access was denied. Please enable location permissions or type your address manually.');
-  },{enableHighAccuracy:true,timeout:10000});
-}
-
-let trkMap=null,trkDriverMarker=null,trkDirRenderer=null,trkLocationSub=null;
-async function initTrackingMap(){
-  await loadGoogleMaps();
-  const el=document.getElementById('trkmap');
-  if(!el||!AppState.driver||!AppState.driver.id)return;
-  const fallback={lat:-25.7479,lng:28.2293};
-  if(!trkMap){
-    trkMap=new google.maps.Map(el,{center:fallback,zoom:14,disableDefaultUI:true});
-    trkDriverMarker=new google.maps.Marker({map:trkMap,position:fallback});
-    trkDirRenderer=new google.maps.DirectionsRenderer({map:trkMap,suppressMarkers:true,polylineOptions:{strokeColor:'#BB2235',strokeWeight:5}});
-  }
-
-  function routeAndUpdateEta(driverPos){
-    const dest=AppState.pickup;
-    if(!dest)return;
-    const svc=new google.maps.DirectionsService();
-    svc.route({origin:driverPos,destination:dest,travelMode:google.maps.TravelMode.DRIVING},(res,status)=>{
-      if(status==='OK'){
-        trkDirRenderer.setDirections(res);
-        const leg=res.routes[0].legs[0];
-        const etaEl=document.getElementById('trkEtaText');
-        if(etaEl)etaEl.textContent=leg.duration.text;
-        AppState.lastKnownEtaText=leg.duration.text;
-      }
-    });
-  }
-
-  // Initial fetch — show last known position immediately, don't wait for a live update
-  try{
-    const initial=await getDriverLocation(AppState.driver.id);
-    if(initial){
-      const p={lat:initial.lat,lng:initial.lng};
-      trkMap.setCenter(p);trkDriverMarker.setPosition(p);
-      routeAndUpdateEta(p);
-    }
-  }catch(e){console.error('Could not fetch initial driver location',e);}
-
-  // Live updates as the driver moves
-  if(trkLocationSub){sb.removeChannel(trkLocationSub);}
-  trkLocationSub=subscribeToDriverLocation(AppState.driver.id, (loc)=>{
-    const p={lat:loc.lat,lng:loc.lng};
-    trkMap.setCenter(p);trkDriverMarker.setPosition(p);
-    routeAndUpdateEta(p);
-  });
-}
-function stopTrackingMap(){
-  if(trkLocationSub){sb.removeChannel(trkLocationSub);trkLocationSub=null;}
-}
-
-let _autocompleteInitDone=false;
-async function initAddressAutocomplete(){
-  if(_autocompleteInitDone)return;
-  await loadGoogleMaps();
-  const pickupInput=document.getElementById('pickupInput');
-  const dropoffInput=document.getElementById('dropoffInput');
-  const saOptions={componentRestrictions:{country:'za'},fields:['formatted_address','geometry']};
-
-  if(pickupInput){
-    const pAuto=new google.maps.places.Autocomplete(pickupInput,saOptions);
-    pAuto.addListener('place_changed',()=>{
-      const place=pAuto.getPlace();
-      if(place&&place.formatted_address){
-        pickupInput.value=place.formatted_address;
-        AppState.pickup=place.formatted_address;
-        if(place.geometry&&place.geometry.location){
-          AppState.pickupLat=place.geometry.location.lat();
-          AppState.pickupLng=place.geometry.location.lng();
-        }
-        updateAddress();
-      }
-    });
-  }
-  if(dropoffInput){
-    const dAuto=new google.maps.places.Autocomplete(dropoffInput,saOptions);
-    dAuto.addListener('place_changed',()=>{
-      const place=dAuto.getPlace();
-      if(place&&place.formatted_address){
-        dropoffInput.value=place.formatted_address;
-        AppState.dropoff=place.formatted_address;
-        if(place.geometry&&place.geometry.location){
-          AppState.dropoffLat=place.geometry.location.lat();
-          AppState.dropoffLng=place.geometry.location.lng();
-        }
-        updateAddress();
-      }
-    });
-  }
-  _autocompleteInitDone=true;
-}
 function go(id){
   document.querySelectorAll('.scr').forEach(s=>s.classList.remove('on'));
   document.getElementById(id).classList.add('on');
-  if(id==='home'){initHomeMap();renderSavedAddressesUI();}else{stopHomeMapWatch();}
-  if(id==='tracking'){initTrackingMap();}else{stopTrackingMap();}
+  if(id==='home'){if(_homeRaf)cancelAnimationFrame(_homeRaf);_animateHome();}else{if(_homeRaf){cancelAnimationFrame(_homeRaf);_homeRaf=null;}}
+  if(id==='tracking')requestAnimationFrame(startTrk);
   if(id==='onboard')requestAnimationFrame(drawObMap);
   if(id==='schedule')buildCalendar();
   if(id==='referral')renderRefCode();
-  if(id==='booking'){renderVehicleTiles();renderVcCards();initBookingDefaults();initAddressAutocomplete();}
+  if(id==='booking')initBookingDefaults();
   if(id==='confirm')renderConfirmScreen();
   if(id==='tracking')renderTrackingScreen();
   if(id==='delivered')renderDeliveredScreen();
@@ -1609,26 +1381,7 @@ const AppState={
 };
 
 function calcFare(){
-  const distanceCost=(AppState.vehiclePerKmRate||0)*(AppState.routeDistanceKm||0);
-  const total=AppState.vehiclePrice + distanceCost + AppState.addons.reduce((sum,a)=>sum+a.price,0);
-  return Math.round(total);
-}
-
-async function calculateRouteDistance(){
-  if(!AppState.pickup||!AppState.dropoff){AppState.routeDistanceKm=0;return;}
-  await loadGoogleMaps();
-  return new Promise((resolve)=>{
-    const svc=new google.maps.DirectionsService();
-    svc.route({origin:AppState.pickup,destination:AppState.dropoff,travelMode:google.maps.TravelMode.DRIVING},(res,status)=>{
-      if(status==='OK'&&res.routes[0]&&res.routes[0].legs[0]){
-        AppState.routeDistanceKm=res.routes[0].legs[0].distance.value/1000;
-      }else{
-        console.error('Could not calculate route distance, status:',status);
-        AppState.routeDistanceKm=0;
-      }
-      resolve();
-    });
-  });
+  return AppState.vehiclePrice + AppState.addons.reduce((sum,a)=>sum+a.price,0);
 }
 
 function refreshPriceDisplay(){
@@ -1645,126 +1398,32 @@ function refreshPriceDisplay(){
 }
 
 /* ─── TILE / VEHICLE / TOGGLE ─────────── */
-const _vehicleIconMap={
-  'Bakkie':'<svg width="40" height="24" viewBox="0 0 50 28" fill="none"><rect x="14" y="3" width="32" height="16" rx="2.5" stroke="white" stroke-width="1.8"/><path d="M3 13h11l5-10h6" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 13v8h47v-8" stroke="white" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="24" r="4" stroke="white" stroke-width="1.8"/><circle cx="39" cy="24" r="4" stroke="white" stroke-width="1.8"/></svg>',
-  'Van':'<svg width="40" height="24" viewBox="0 0 50 28" fill="none"><path d="M2 20V11c0-2 1.5-4 3-4L22 4h22a3 3 0 013 3v13" stroke="white" stroke-width="1.8" stroke-linecap="round"/><path d="M2 20h46" stroke="white" stroke-width="1.8" stroke-linecap="round"/><rect x="6" y="7" width="9" height="7" rx="1.5" stroke="white" stroke-width="1.5"/><rect x="18" y="7" width="9" height="7" rx="1.5" stroke="white" stroke-width="1.5"/><circle cx="11" cy="24" r="4" stroke="white" stroke-width="1.8"/><circle cx="37" cy="24" r="4" stroke="white" stroke-width="1.8"/></svg>',
-  'Moto':'<svg width="36" height="24" viewBox="0 0 42 26" fill="none"><circle cx="9" cy="20" r="5.5" stroke="white" stroke-width="1.8"/><circle cx="33" cy="20" r="5.5" stroke="white" stroke-width="1.8"/><path d="M14.5 20H27.5M21 20V9" stroke="white" stroke-width="1.8" stroke-linecap="round"/><path d="M15 9h12l4 6H11l4-6z" stroke="white" stroke-width="1.8" stroke-linejoin="round"/><path d="M21 9V4l5-3" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg>',
-  '_default_truck':'<svg width="40" height="24" viewBox="0 0 52 28" fill="none"><rect x="2" y="4" width="32" height="16" rx="2" stroke="white" stroke-width="1.8"/><path d="M34 9h12l5 8v4H34V9z" stroke="white" stroke-width="1.8" stroke-linejoin="round"/><circle cx="11" cy="24" r="4" stroke="white" stroke-width="1.8"/><circle cx="26" cy="24" r="4" stroke="white" stroke-width="1.8"/><circle cx="43" cy="24" r="4" stroke="white" stroke-width="1.8"/></svg>'
-};
-
-let _cachedVehicleTypes=[];
-async function renderVehicleTiles(){
-  const row=document.getElementById('tileRow');
-  if(!row)return;
-  try{
-    _cachedVehicleTypes=await getVehicleTypes();
-  }catch(e){
-    console.error('Could not load vehicle types',e);
-    return;
-  }
-  row.innerHTML='';
-  _cachedVehicleTypes.forEach((v,i)=>{
-    const icon=_vehicleIconMap[v.name]||_vehicleIconMap['_default_truck'];
-    const tile=document.createElement('div');
-    tile.className='tile'+(i===0?' on':'');
-    tile.onclick=function(){selTile(this,v);};
-    tile.innerHTML='<div class="ti">'+icon+'</div><span class="tl">'+v.name+'</span>';
-    row.appendChild(tile);
-  });
-  if(_cachedVehicleTypes.length){
-    const first=_cachedVehicleTypes[0];
-    AppState.vehicleName=first.name;
-    AppState.vehiclePrice=parseFloat(first.base_price)||0;
-    AppState.vehiclePerKmRate=parseFloat(first.per_km_rate)||0;
-    AppState.vehicleTypeId=first.id;
-  }
-}
-
-function selTile(el,vehicle){
+const vehicleTileMap={Bakkie:110,Truck:320,Van:185,Moto:65,Helpers:110};
+function selTile(el){
   document.querySelectorAll('.tile').forEach(t=>t.classList.remove('on'));
   el.classList.add('on');
-  AppState.vehicleName=vehicle.name;
-  AppState.vehiclePrice=parseFloat(vehicle.base_price)||0;
-  AppState.vehiclePerKmRate=parseFloat(vehicle.per_km_rate)||0;
-  AppState.vehicleTypeId=vehicle.id;
-  refreshPriceDisplay();
-}
-const _vcIllustrationMap={
-  'Moto':'<svg width="52" height="28" viewBox="0 0 52 28" fill="none"><circle cx="10" cy="22" r="5" stroke="white" stroke-width="1.8"/><circle cx="36" cy="22" r="5" stroke="white" stroke-width="1.8"/><path d="M4 22V14L10 4h8l5 8" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M17 4h12a2 2 0 012 2v9H4" stroke="white" stroke-width="1.8" stroke-linecap="round"/><path d="M31 15h14l-3-9H31v9z" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-  'Bakkie':'<svg width="58" height="28" viewBox="0 0 62 28" fill="none"><rect x="16" y="3" width="34" height="17" rx="2.5" stroke="white" stroke-width="1.8"/><path d="M3 14h13l5-11h7" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 14v7h58v-7" stroke="white" stroke-width="1.8" stroke-linecap="round"/><circle cx="13" cy="24" r="4" stroke="white" stroke-width="1.8"/><circle cx="47" cy="24" r="4" stroke="white" stroke-width="1.8"/></svg>',
-  'Van':'<svg width="54" height="28" viewBox="0 0 56 28" fill="none"><path d="M2 20V11c0-2 2-4 3.5-5L24 4h26a3 3 0 013 3v13" stroke="white" stroke-width="1.8" stroke-linecap="round"/><path d="M2 20h52" stroke="white" stroke-width="1.8" stroke-linecap="round"/><rect x="6" y="7" width="9" height="7" rx="1.5" stroke="white" stroke-width="1.5"/><rect x="18" y="7" width="9" height="7" rx="1.5" stroke="white" stroke-width="1.5"/><circle cx="12" cy="24" r="4" stroke="white" stroke-width="1.8"/><circle cx="42" cy="24" r="4" stroke="white" stroke-width="1.8"/></svg>',
-  '4-Ton':'<svg width="58" height="28" viewBox="0 0 62 28" fill="none"><rect x="2" y="4" width="36" height="17" rx="2" stroke="white" stroke-width="1.8"/><path d="M38 10h16l5 8v4H38V10z" stroke="white" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="24" r="4" stroke="white" stroke-width="1.8"/><circle cx="28" cy="24" r="4" stroke="white" stroke-width="1.8"/><circle cx="50" cy="24" r="4" stroke="white" stroke-width="1.8"/><rect x="6" y="7" width="11" height="8" rx="1.5" stroke="white" stroke-width="1.5"/></svg>',
-  '8-Ton':'<svg width="58" height="28" viewBox="0 0 62 28" fill="none"><rect x="2" y="2" width="58" height="20" rx="2" stroke="white" stroke-width="1.8"/><rect x="8" y="6" width="14" height="10" rx="1" stroke="white" stroke-width="1.5"/><rect x="26" y="6" width="14" height="10" rx="1" stroke="white" stroke-width="1.5"/><rect x="44" y="6" width="12" height="10" rx="1" stroke="white" stroke-width="1.5"/><circle cx="10" cy="25" r="3" stroke="white" stroke-width="1.8"/><circle cx="26" cy="25" r="3" stroke="white" stroke-width="1.8"/><circle cx="42" cy="25" r="3" stroke="white" stroke-width="1.8"/><circle cx="54" cy="25" r="3" stroke="white" stroke-width="1.8"/></svg>',
-  '_default':'<svg width="58" height="28" viewBox="0 0 62 28" fill="none"><rect x="2" y="4" width="32" height="16" rx="2" stroke="white" stroke-width="1.8"/><path d="M34 9h12l5 8v4H34V9z" stroke="white" stroke-width="1.8" stroke-linejoin="round"/><circle cx="11" cy="24" r="4" stroke="white" stroke-width="1.8"/><circle cx="26" cy="24" r="4" stroke="white" stroke-width="1.8"/><circle cx="43" cy="24" r="4" stroke="white" stroke-width="1.8"/></svg>'
-};
-
-async function renderVcCards(){
-  const row=document.getElementById('vcRow');
-  if(!row)return;
-  let vehicles=_cachedVehicleTypes;
-  if(!vehicles||!vehicles.length){
-    try{vehicles=await getVehicleTypes();_cachedVehicleTypes=vehicles;}catch(e){console.error('Could not load vehicle types',e);return;}
+  const name=el.querySelector('.tl').textContent.trim();
+  if(vehicleTileMap[name]){
+    AppState.vehicleName=name;
+    AppState.vehiclePrice=vehicleTileMap[name];
   }
-  row.innerHTML='';
-  vehicles.forEach((v)=>{
-    const illustration=_vcIllustrationMap[v.name]||_vcIllustrationMap['_default'];
-    const isSelected=AppState.vehicleTypeId?v.id===AppState.vehicleTypeId:v.name===AppState.vehicleName;
-    const card=document.createElement('div');
-    card.className='vc'+(isSelected?' sel':'');
-    card.onclick=function(){selV(this,v);};
-    card.innerHTML=
-      (v.name==='Bakkie'?'<div class="vcb">POPULAR</div>':'')+
-      '<div class="vc-ill">'+illustration+'</div>'+
-      '<div class="vc-n">'+v.name+'</div>'+
-      '<div class="vc-c">'+(v.capacity_label||'')+'</div>'+
-      '<div class="vc-p">From R'+Math.round(v.base_price)+'</div>';
-    row.appendChild(card);
-  });
 }
-
-function selV(el,vehicle){
+function selV(el){
   document.querySelectorAll('.vc').forEach(c=>c.classList.remove('sel'));
   el.classList.add('sel');
-  AppState.vehiclePrice=parseFloat(vehicle.base_price)||0;
-  AppState.vehiclePerKmRate=parseFloat(vehicle.per_km_rate)||0;
-  AppState.vehicleName=vehicle.name;
-  AppState.vehicleTypeId=vehicle.id;
+  AppState.vehiclePrice=parseFloat(el.dataset.price)||0;
+  AppState.vehicleName=el.dataset.name||el.querySelector('.vc-n').textContent;
   refreshPriceDisplay();
 }
-const _addonIconMap={
-  'helpers':'<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="7" r="3" stroke="white" stroke-width="2"/><path d="M3 21c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="white" stroke-width="2" stroke-linecap="round"/><circle cx="17" cy="7" r="3" stroke="white" stroke-width="2"/><path d="M14 21c0-2 1.5-5 6-5" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>',
-  'blankets':'<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M21 8H3a1 1 0 00-1 1v11a1 1 0 001 1h18a1 1 0 001-1V9a1 1 0 00-1-1z" stroke="white" stroke-width="2"/><path d="M9 8V5a1 1 0 011-1h4a1 1 0 011 1v3" stroke="white" stroke-width="2"/></svg>',
-  'insurance':'<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-  'priority':'<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="4" y1="22" x2="4" y2="15" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>',
-  '_default':'<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="white" stroke-width="2"/></svg>'
-};
-
-async function renderAddonRows(){
-  const container=document.getElementById('addonRow');
-  if(!container)return;
-  let addons=[];
-  try{addons=await getServiceAddons();}catch(e){console.error('Could not load add-ons',e);return;}
-  container.innerHTML='';
-  addons.forEach(a=>{
-    const icon=_addonIconMap[a.icon_key]||_addonIconMap['_default'];
-    const isOn=AppState.addons.some(sel=>sel.id===a.id);
-    const row=document.createElement('div');
-    row.className='addon-row';
-    row.onclick=function(){togAddon(row,a);};
-    row.innerHTML=
-      '<div class="addon-l"><div class="addon-ic">'+icon+'</div><div><div class="addon-n">'+a.name+'</div><div class="addon-s">+R'+Math.round(a.price)+(a.description?(' · '+a.description):'')+'</div></div></div>'+
-      '<div class="tog'+(isOn?' on':'')+'"><div class="togt"></div></div>';
-    container.appendChild(row);
-  });
-}
-
-function togAddon(row,addon){
+function togAddon(row){
   const tog=row.querySelector('.tog');
   tog.classList.toggle('on');
+  const name=row.querySelector('.addon-n').textContent.trim();
+  const price=parseFloat(row.dataset.price)||0;
   if(tog.classList.contains('on')){
-    if(!AppState.addons.find(a=>a.id===addon.id))AppState.addons.push({id:addon.id,name:addon.name,price:parseFloat(addon.price)||0});
+    if(!AppState.addons.find(a=>a.name===name))AppState.addons.push({name,price});
   }else{
-    AppState.addons=AppState.addons.filter(a=>a.id!==addon.id);
+    AppState.addons=AppState.addons.filter(a=>a.name!==name);
   }
   refreshPriceDisplay();
 }
@@ -1785,14 +1444,19 @@ function swapLocations(){
 }
 
 function initBookingDefaults(){
-  // Vehicle and addon state is now maintained directly by renderVehicleTiles(),
-  // renderVcCards(), and togAddon() — no need to re-derive it from DOM attributes.
-  if(!AppState.addons)AppState.addons=[];
-  renderAddonRows();
+  // sync initial state to whatever card/toggles are marked selected/on in markup
+  const selVc=document.querySelector('.vc.sel');
+  if(selVc){AppState.vehiclePrice=parseFloat(selVc.dataset.price)||0;AppState.vehicleName=selVc.dataset.name||AppState.vehicleName;}
+  AppState.addons=[];
+  document.querySelectorAll('.addon-row').forEach(row=>{
+    if(row.querySelector('.tog').classList.contains('on')){
+      AppState.addons.push({name:row.querySelector('.addon-n').textContent.trim(),price:parseFloat(row.dataset.price)||0});
+    }
+  });
   refreshPriceDisplay();
 }
 
-async function submitBooking(){
+function submitBooking(){
   if(!AppState.pickup.trim()||!AppState.dropoff.trim()){
     const p=document.getElementById('pickupInput'),d=document.getElementById('dropoffInput');
     if(!AppState.pickup.trim()&&p){p.style.borderColor='#FF3B30';p.focus();}
@@ -1800,15 +1464,6 @@ async function submitBooking(){
     setTimeout(()=>{if(p)p.style.borderColor='';if(d)d.style.borderColor='';},1200);
     return;
   }
-  const btn=document.querySelector('[onclick="submitBooking()"]');
-  if(btn){btn.disabled=true;btn.textContent='Calculating route…';}
-  try{
-    await calculateRouteDistance();
-  }catch(e){
-    console.error('Route calculation failed',e);
-    AppState.routeDistanceKm=0;
-  }
-  if(btn){btn.disabled=false;btn.innerHTML='Confirm load <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="black" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';}
   refreshPriceDisplay();
   go('confirm');
 }
@@ -1821,52 +1476,6 @@ function renderConfirmScreen(){
   set('cfDropoff',AppState.dropoff||'—');
   set('cfAddons',AppState.addons.length?AppState.addons.map(a=>a.name).join(', '):'None');
   set('cfTotal','R'+calcFare());
-
-  const payBtn = document.querySelector('[onclick="payAndFindDriver()"]');
-  if(payBtn){ payBtn.disabled = false; payBtn.textContent = 'Find my driver'; }
-}
-
-/* ─── PAYSTACK CHECKOUT ─────────────────── */
-const PAYSTACK_PUBLIC_KEY = 'pk_test_8191cf081f24b479e052e1233b0b130373325d1f';
-
-function closeConfirmIfSafe(){
-  if(window._paymentInProgress){
-    return; // Paystack iframe is genuinely open — don't navigate underneath it
-  }
-  go('booking');
-}
-
-async function payAndFindDriver(){
-  const amountZAR = calcFare();
-  const user = await sbGetCurrentUser();
-  if(!user){ alert('Please sign in again.'); return; }
-
-  const btn = document.querySelector('[onclick="payAndFindDriver()"]');
-  if(btn){ btn.disabled = true; btn.textContent = 'Opening payment...'; }
-
-  let rawIdentifier = (user && (user.phone || user.id)) ? (user.phone || user.id) : 'guest';
-  let safeIdentifier = String(rawIdentifier).replace(/[^a-zA-Z0-9]/g, '');
-  if(!safeIdentifier) safeIdentifier = 'rider' + Date.now();
-  const emailForPaystack = safeIdentifier + '@riders.eesyload.com';
-  console.log('Paystack email:', emailForPaystack, 'user:', user);
-  const handler = PaystackPop.setup({
-    key: PAYSTACK_PUBLIC_KEY,
-    email: emailForPaystack,
-    amount: Math.round(amountZAR * 100), // Paystack expects kobo/cents
-    currency: 'ZAR',
-    ref: 'EL-' + Date.now() + '-' + Math.random().toString(36).slice(2,8),
-    callback: function(response){
-      window._paymentInProgress = false;
-      window._pendingPaystackRef = response.reference;
-      findDriver();
-    },
-    onClose: function(){
-      window._paymentInProgress = false;
-      if(btn){ btn.disabled = false; btn.textContent = 'Find my driver'; }
-    }
-  });
-  window._paymentInProgress = true;
-  handler.openIframe();
 }
 
 /* ─── FIND DRIVER FLOW ─────────────────── */
@@ -1877,12 +1486,10 @@ async function findDriver(){
       pickup_address: AppState.pickup,
       dropoff_address: AppState.dropoff,
       vehicle_name: AppState.vehicleName,
-      vehicle_type_id: AppState.vehicleTypeId,
       base_fare: AppState.vehiclePrice,
       total_fare: calcFare(),
       addons: AppState.addons,
-      addons_total: AppState.addons.reduce((s,a)=>s+a.price,0),
-      paystack_reference: window._pendingPaystackRef || null
+      addons_total: AppState.addons.reduce((s,a)=>s+a.price,0)
     });
     AppState.currentBookingId=booking.id;
     if(AppState.bookingSub){sb.removeChannel(AppState.bookingSub);}
@@ -1891,11 +1498,8 @@ async function findDriver(){
         try{
           const driver=await getDriverProfile(updated.driver_id);
           AppState.driver={
-            id: updated.driver_id,
             name: driver.full_name||'Your driver',
             vehicle: (driver.vehicle_type||'')+(driver.vehicle_plate?(' · '+driver.vehicle_plate):''),
-            avatarUrl: driver.avatar_url||null,
-            phone: driver.phone||null,
             rating: 5.0,
             loads: 0
           };
@@ -1929,16 +1533,6 @@ async function cancelSearch(){
 /* ─── TRACKING SCREEN ──────────────────── */
 function renderTrackingScreen(){
   const set=(id,val)=>{const el=document.getElementById(id);if(el)el.textContent=val;};
-  const avImg=document.getElementById('trkDriverAvatarImg');
-  const avFallback=document.getElementById('trkDriverAvatarFallback');
-  if(AppState.driver.avatarUrl && avImg){
-    avImg.src=AppState.driver.avatarUrl;
-    avImg.style.display='block';
-    if(avFallback)avFallback.style.display='none';
-  }else if(avImg){
-    avImg.style.display='none';
-    if(avFallback)avFallback.style.display='block';
-  }
   set('trkDriverName',AppState.driver.name);
   set('trkDriverVehicle',AppState.driver.vehicle);
   set('trkDriverRating',AppState.driver.rating.toFixed(1));
@@ -1964,52 +1558,11 @@ function markDelivered(){
   go('delivered');
 }
 
-function renderChatMsg(msg, myId){
-  const msgs=document.getElementById('chatMsgs');
-  if(!msgs)return;
-  const isMine = msg.sender_id === myId;
-  const d=new Date(msg.created_at);
-  const t=d.getHours()+':'+(d.getMinutes()<10?'0':'')+d.getMinutes();
-  const div=document.createElement('div');
-  div.className = isMine ? 'msg out' : 'msg in';
-  div.innerHTML=`<div class="msg-bubble"></div><div class="msg-time">${t}</div>`;
-  div.querySelector('.msg-bubble').textContent = msg.body; // textContent avoids HTML injection from chat text
-  msgs.appendChild(div);
-  msgs.scrollTop=msgs.scrollHeight;
-}
-
-async function renderChatHeader(){
+function renderChatHeader(){
   const el=document.getElementById('chatDriverName');
   if(el)el.textContent=AppState.driver.name;
   const input=document.getElementById('chatInput');
   if(input)input.placeholder='Message '+AppState.driver.name.split(' ')[0]+'…';
-
-  const msgsEl=document.getElementById('chatMsgs');
-  if(msgsEl)msgsEl.innerHTML='';
-  if(!AppState.currentBookingId)return;
-
-  const user = await sbGetCurrentUser();
-  const myId = user ? user.id : null;
-
-  try{
-    const history = await getChatMessages(AppState.currentBookingId);
-    history.forEach(m=>renderChatMsg(m, myId));
-  }catch(e){
-    console.error('Could not load chat history', e);
-  }
-
-  if(AppState.chatSub){ sb.removeChannel(AppState.chatSub); AppState.chatSub=null; }
-  AppState.chatSub = subscribeToChatMessages(AppState.currentBookingId, (msg)=>{
-    renderChatMsg(msg, myId);
-  });
-}
-
-function callDriver(){
-  if(!AppState.driver || !AppState.driver.phone){
-    alert('Driver phone number is not available.');
-    return;
-  }
-  window.location.href = 'tel:' + AppState.driver.phone;
 }
 
 function shareETA(){
@@ -2138,12 +1691,6 @@ async function renderHistoryList(){
 
 /* ─── PROFILE SCREEN ───────────────────── */
 async function renderProfileScreen(){
-  try{
-    const me = await getRiderProfile();
-    const setP=(id,val)=>{const el=document.getElementById(id);if(el)el.textContent=val;};
-    setP('profName', me.full_name || 'Your Name');
-    setP('profPhone', me.phone ? '+'+me.phone : '');
-  }catch(e){ console.error('Failed to load rider profile', e); }
   await refreshLoads();
   const loads=getLoads();
   const completed=loads.filter(l=>l.status==='completed');
@@ -2627,10 +2174,6 @@ function startTrk(){
         const el = document.getElementById(id);
         if(el){ el.style.borderColor='#FF3B30'; setTimeout(()=>el.style.borderColor='',800); }
       });
-      const errEl=document.getElementById('otp-error-msg');
-      if(errEl) errEl.textContent = e.message.includes('expired')
-        ? 'Code expired — request a new one.'
-        : 'Incorrect code. Please try again.';
     }
   };
 

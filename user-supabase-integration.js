@@ -29,23 +29,146 @@ async function sbSignOut() {
   if (error) throw error;
 }
 
-/* ─── BOOKINGS ───────────────────────────────────────────── */
-async function createBooking(booking) {
+/* ─── REFERRALS ──────────────────────────────────────────── */
+async function getMyReferralCode() {
   const user = await sbGetCurrentUser();
   if (!user) throw new Error('Not signed in');
-  const { data, error } = await sb.from('bookings').insert({
-    rider_id: user.id,
-    pickup_address: booking.pickup_address,
-    dropoff_address: booking.dropoff_address,
-    vehicle_name: booking.vehicle_name,
-    base_fare: booking.base_fare,
-    total_fare: booking.total_fare,
-    addons: booking.addons || [],
-    addons_total: booking.addons_total || 0,
-    status: 'pending',
-  }).select().single();
+  const { data, error } = await sb.from('profiles')
+    .select('referral_code,referred_by').eq('id', user.id).single();
   if (error) throw error;
   return data;
+}
+
+async function applyReferralCode(code) {
+  const user = await sbGetCurrentUser();
+  if (!user) throw new Error('Not signed in');
+
+  const { data: ownerId, error: rpcError } = await sb.rpc('resolve_referral_code', { code });
+  if (rpcError) throw rpcError;
+  if (!ownerId) throw new Error('That referral code was not found.');
+  if (ownerId === user.id) throw new Error("You can't use your own referral code.");
+
+  const { error } = await sb.from('profiles')
+    .update({ referred_by: ownerId }).eq('id', user.id);
+  if (error) throw error;
+  return true;
+}
+
+/* ─── VEHICLE TYPES & ADD-ONS (real pricing) ──────────────── */
+async function getVehicleTypes() {
+  const { data, error } = await sb.from('vehicle_types')
+    .select('*').eq('active', true).order('sort_order');
+  if (error) throw error;
+  return data;
+}
+
+async function getServiceAddons() {
+  const { data, error } = await sb.from('service_addons')
+    .select('*').eq('active', true).order('sort_order');
+  if (error) throw error;
+  return data;
+}
+
+/* ─── SAVED ADDRESSES ────────────────────────────────────── */
+async function getSavedAddresses() {
+  const user = await sbGetCurrentUser();
+  if (!user) throw new Error('Not signed in');
+  const { data, error } = await sb.from('saved_addresses')
+    .select('*').eq('rider_id', user.id)
+    .order('created_at', { ascending: true });
+  if (error) throw error;
+  return data;
+}
+
+async function saveAddress(label, formattedAddress, lat, lng) {
+  const user = await sbGetCurrentUser();
+  if (!user) throw new Error('Not signed in');
+  const { data, error } = await sb.from('saved_addresses')
+    .upsert({
+      rider_id: user.id,
+      label,
+      formatted_address: formattedAddress,
+      lat: lat || null,
+      lng: lng || null,
+    }, { onConflict: 'rider_id,label' })
+    .select().single();
+  if (error) throw error;
+  return data;
+}
+
+/* ─── DRIVER LIVE LOCATION (for rider tracking map) ───────── */
+async function getDriverLocation(driverId) {
+  const { data, error } = await sb.from('driver_locations')
+    .select('lat,lng,heading,updated_at')
+    .eq('driver_id', driverId)
+    .single();
+  if (error) return null; // no location yet, or RLS blocked (no active booking together)
+  return data;
+}
+
+function subscribeToDriverLocation(driverId, onUpdate) {
+  return sb.channel('driver-location-'+driverId)
+    .on('postgres_changes', {
+      event: '*', schema: 'public', table: 'driver_locations', filter: 'driver_id=eq.'+driverId
+    }, (payload) => onUpdate(payload.new))
+    .subscribe();
+}
+
+/* ─── BOOKINGS ───────────────────────────────────────────── */
+async function createBooking(booking) {
+  const { data: sess } = await sb.auth.getSession();
+  const token = sess?.session?.access_token;
+  if (!token) throw new Error('Not signed in');
+
+  const res = await fetch(SUPABASE_URL + '/functions/v1/verify-and-create-booking', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + token,
+      'apikey': SUPABASE_ANON_KEY,
+    },
+    body: JSON.stringify({
+      pickup_address: booking.pickup_address,
+      dropoff_address: booking.dropoff_address,
+      vehicle_type_id: booking.vehicle_type_id,
+      addon_ids: (booking.addons || []).map(a => a.id).filter(Boolean),
+      claimed_total_fare: booking.total_fare,
+      paystack_reference: booking.paystack_reference || null,
+    }),
+  });
+
+  const result = await res.json();
+  if (!res.ok) {
+    throw new Error(result.error || 'Could not create booking');
+  }
+  return result.booking;
+}
+
+async function getChatMessages(bookingId) {
+  const { data, error } = await sb.from('booking_messages')
+    .select('id, sender_id, body, created_at')
+    .eq('booking_id', bookingId)
+    .order('created_at', { ascending: true });
+  if (error) throw error;
+  return data;
+}
+
+async function sendChatMessage(bookingId, body) {
+  const user = await sbGetCurrentUser();
+  if (!user) throw new Error('Not signed in');
+  const { data, error } = await sb.from('booking_messages')
+    .insert({ booking_id: bookingId, sender_id: user.id, body })
+    .select().single();
+  if (error) throw error;
+  return data;
+}
+
+function subscribeToChatMessages(bookingId, onMessage) {
+  return sb.channel('chat-' + bookingId)
+    .on('postgres_changes', {
+      event: 'INSERT', schema: 'public', table: 'booking_messages', filter: 'booking_id=eq.' + bookingId
+    }, (payload) => onMessage(payload.new))
+    .subscribe();
 }
 
 function subscribeToBookingUpdates(bookingId, onUpdate) {
@@ -57,7 +180,15 @@ function subscribeToBookingUpdates(bookingId, onUpdate) {
 }
 
 async function getDriverProfile(driverId) {
-  const { data, error } = await sb.from('profiles').select('full_name,vehicle_type,vehicle_plate').eq('id', driverId).single();
+  const { data, error } = await sb.from('profiles').select('full_name,vehicle_type,vehicle_plate,avatar_url,phone').eq('id', driverId).single();
+  if (error) throw error;
+  return data;
+}
+
+async function getRiderProfile() {
+  const user = await sbGetCurrentUser();
+  if (!user) throw new Error('Not signed in');
+  const { data, error } = await sb.from('profiles').select('full_name,phone').eq('id', user.id).single();
   if (error) throw error;
   return data;
 }
