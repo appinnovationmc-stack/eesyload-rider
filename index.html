@@ -1797,9 +1797,13 @@ function estimateLoadFromText(text){
       matchedItems.push((qty>1?qty+'x ':'')+key);
     }
   });
+  function isNegated(k){
+    const negRe=new RegExp('\\b(no|not|nothing|without)\\b(?:\\s+\\w+){0,3}\\s+'+k,'i');
+    return negRe.test(lower);
+  }
   const suggestedAddonIds=[];
   Object.keys(CHAT_ADDON_KEYWORDS).forEach(id=>{
-    if(CHAT_ADDON_KEYWORDS[id].some(k=>lower.includes(k)))suggestedAddonIds.push(id);
+    if(CHAT_ADDON_KEYWORDS[id].some(k=>lower.includes(k)&&!isNegated(k)))suggestedAddonIds.push(id);
   });
   return {totalWeight,matchedItems,suggestedAddonIds};
 }
