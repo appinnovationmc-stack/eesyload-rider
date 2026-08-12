@@ -1,4 +1,4 @@
-package com.eesyload.rider;
+package eesyload.delivery.user;
 
 import com.getcapacitor.BridgeActivity;
 
