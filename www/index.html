@@ -560,6 +560,7 @@ footer .logo-svg{width:80px;height:auto;}
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://js.paystack.co/v1/inline.js"></script>
 <script src="user-supabase-integration.js"></script>
+<script src="vehicle-icons.js"></script>
 <link rel="stylesheet" href="glass.css">
 </head>
 <body>
@@ -1688,7 +1689,7 @@ async function renderVehicleTiles(){
   }
   row.innerHTML='';
   _cachedVehicleTypes.forEach((v,i)=>{
-    const icon=_vehicleIconMap[v.name]||_vehicleIconMap['_default_truck'];
+    const icon=(typeof eesyVehicleIcon==="function"?eesyVehicleIcon(v.name):(_vehicleIconMap[v.name]||_vehicleIconMap['_default_truck']));
     const tile=document.createElement('div');
     tile.className='tile'+(i===0?' on':'');
     tile.onclick=function(){selTile(this,v);};
@@ -1930,7 +1931,7 @@ function initBookingDefaults(){
   refreshPriceDisplay();
 }
 
-async async async function submitBooking(){
+async function submitBooking(){
   if(!AppState.pickup.trim()||!AppState.dropoff.trim()){
     const p=document.getElementById('pickupInput'),d=document.getElementById('dropoffInput');
     if(!AppState.pickup.trim()&&p){p.style.borderColor='#FF3B30';p.focus();}
@@ -3105,5 +3106,6 @@ function startTrk(){
 })();
 </script>
 
+<script src="rider-ui-fix.js"></script>
 </body>
 </html>
