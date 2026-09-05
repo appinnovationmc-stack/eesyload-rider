@@ -1930,7 +1930,7 @@ function initBookingDefaults(){
   refreshPriceDisplay();
 }
 
-async async function submitBooking(){
+async async async function submitBooking(){
   if(!AppState.pickup.trim()||!AppState.dropoff.trim()){
     const p=document.getElementById('pickupInput'),d=document.getElementById('dropoffInput');
     if(!AppState.pickup.trim()&&p){p.style.borderColor='#FF3B30';p.focus();}
