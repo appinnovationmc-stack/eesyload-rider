@@ -560,6 +560,7 @@ footer .logo-svg{width:80px;height:auto;}
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://js.paystack.co/v1/inline.js"></script>
 <script src="user-supabase-integration.js"></script>
+<link rel="stylesheet" href="glass.css">
 </head>
 <body>
 <div class="phone" id="phone">
@@ -1929,7 +1930,7 @@ function initBookingDefaults(){
   refreshPriceDisplay();
 }
 
-async function submitBooking(){
+async async function submitBooking(){
   if(!AppState.pickup.trim()||!AppState.dropoff.trim()){
     const p=document.getElementById('pickupInput'),d=document.getElementById('dropoffInput');
     if(!AppState.pickup.trim()&&p){p.style.borderColor='#FF3B30';p.focus();}
@@ -2096,7 +2097,20 @@ async function cancelLoad(){
   go('home');
 }
 
-function markDelivered(){
+async function markDelivered(){
+  const id = (typeof AppState!=='undefined' && (AppState.currentBookingId||AppState.activeBookingId|| (AppState.currentBooking&&AppState.currentBooking.id)));
+  if(!id){alert('No active booking to complete.');return;}
+  try{
+    if(typeof updateBookingStatus==='function'){
+      await updateBookingStatus(id,'delivered');
+    }else{
+      const {error}=await sb.from('bookings').update({status:'delivered',delivered_at:new Date().toISOString()}).eq('id',id).eq('rider_id',(await sbGetCurrentUser()).id);
+      if(error) throw error;
+    }
+  }catch(e){
+    alert(e.message||'Could not complete booking');
+    return;
+  }
   saveLoadToHistory('completed');
   go('delivered');
 }
