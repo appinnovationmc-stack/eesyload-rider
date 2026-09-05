@@ -2014,7 +2014,11 @@ async function findDriver(){
   try{
     const booking=await createBooking({
       pickup_address: AppState.pickup,
+      pickup_lat: AppState.pickupLat||null,
+      pickup_lng: AppState.pickupLng||null,
       dropoff_address: AppState.dropoff,
+      dropoff_lat: AppState.dropoffLat||null,
+      dropoff_lng: AppState.dropoffLng||null,
       vehicle_name: AppState.vehicleName,
       vehicle_type_id: AppState.vehicleTypeId,
       base_fare: AppState.vehiclePrice,
