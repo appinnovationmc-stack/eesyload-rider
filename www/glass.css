@@ -1,25 +1,95 @@
-/* EesyLoad Rider — glass overlay. Load after inline CSS. */
+/* EesyLoad Rider — same glass language as driver */
 html, html[data-theme="dark"], :root{
-  --bg:#000; --s1:rgba(22,22,24,.82); --w:#F5F5F7; --acc:#BB2235;
+  --bg:#000000;
+  --s1:rgba(22,22,24,.82);
+  --s2:rgba(28,28,30,.78);
+  --s3:#2C2C2E;
+  --w:#F5F5F7;
+  --g40:rgba(245,245,247,.62);
+  --g60:rgba(245,245,247,.42);
+  --acc:#BB2235;
+  --acl:rgba(187,34,53,.16);
+  --b:rgba(255,255,255,.12);
   color-scheme:dark;
 }
 html[data-theme="light"]{
-  --bg:#F2F2F7; --s1:rgba(255,255,255,.88); --w:#1C1C1E;
+  --bg:#F2F2F7;
+  --s1:rgba(255,255,255,.88);
+  --s2:#FFFFFF;
+  --s3:#E5E5EA;
+  --w:#1C1C1E;
+  --g40:#6E6E73;
+  --g60:#8E8E93;
+  --acc:#BB2235;
+  --acl:rgba(187,34,53,.10);
+  --b:rgba(0,0,0,.08);
   color-scheme:light;
 }
-html,body,.phone{background:var(--bg)!important;color:var(--w)!important;
-  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,sans-serif!important}
-.sb,.di,#sbtime{display:none!important}
-.cta.grn,.cta.acc,.btn-red{
-  background:linear-gradient(180deg,#D12B40,#BB2235)!important;color:#fff!important;border:0!important;border-radius:14px!important}
-.gbtn,.back,.chip,.eta-pill{
-  background:rgba(22,22,24,.72)!important;backdrop-filter:blur(24px);border:.5px solid rgba(255,255,255,.12)!important;color:var(--w)!important}
-html[data-theme="light"] .gbtn,
-html[data-theme="light"] .back,
-html[data-theme="light"] .chip{
-  background:rgba(255,255,255,.86)!important;color:#1C1C1E!important;border:.5px solid rgba(0,0,0,.08)!important}
-.det-card,.drv-card,.addon-row{
-  background:rgba(22,22,24,.78)!important;border:.5px solid rgba(255,255,255,.12)!important;backdrop-filter:blur(32px)}
+html,body,.phone{
+  background:var(--bg)!important;
+  color:var(--w)!important;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display",system-ui,sans-serif!important;
+}
+.sb,.di,#sbtime,.sb-t,.sb-i{display:none!important;height:0!important}
+.scr{background:transparent!important}
+.nav{
+  background:rgba(12,12,14,.78)!important;
+  backdrop-filter:blur(28px) saturate(180%);
+  border-top:.5px solid var(--b)!important;
+}
+html[data-theme="light"] .nav{background:rgba(242,242,247,.86)!important}
+.ni-l{color:var(--g60)!important}
+.ni.on .ni-l,.ni.on i,.ni.on svg{color:var(--w)!important}
+html[data-theme="light"] .ni.on .ni-l{color:#1C1C1E!important}
+.cta,.cta.grn,.cta.acc,.btn-red{
+  background:linear-gradient(180deg,#D12B40,#BB2235)!important;
+  color:#fff!important;
+  border:0!important;
+  border-radius:14px!important;
+  box-shadow:0 8px 24px rgba(187,34,53,.34)!important;
+  font-weight:650!important;
+}
+.cta.dark,.btn-ghost{
+  background:rgba(255,255,255,.08)!important;
+  color:var(--w)!important;
+  border:.5px solid var(--b)!important;
+  box-shadow:none!important;
+}
+.back,.gbtn,.qchip,.chip,.eta-pill,.otp-box,.ts-btn{
+  background:var(--s1)!important;
+  color:var(--w)!important;
+  border:.5px solid var(--b)!important;
+  backdrop-filter:blur(24px);
+}
+.row:active{background:var(--s2)!important}
+.rt{color:var(--w)!important}
+.rs,.otp-sub,.st-s,.sos-lbl{color:var(--g60)!important}
+.ri{background:var(--s2)!important;border-radius:10px!important}
+.det-card,.drv-card,.addon-row,.rec-row,.biz-perk{
+  background:var(--s1)!important;
+  border:.5px solid var(--b)!important;
+  backdrop-filter:blur(32px) saturate(180%);
+  color:var(--w)!important;
+  border-radius:16px!important;
+}
+.otp-title,.bk-title,.otp-inner{color:var(--w)!important}
+.inp,.biz-inp,input,select,textarea{
+  color:var(--w)!important;
+}
 html[data-theme="light"] .det-card,
-html[data-theme="light"] .drv-card{
-  background:rgba(255,255,255,.9)!important;color:#1C1C1E!important}
+html[data-theme="light"] .drv-card,
+html[data-theme="light"] .back,
+html[data-theme="light"] .gbtn,
+html[data-theme="light"] .qchip{
+  background:rgba(255,255,255,.9)!important;
+  color:#1C1C1E!important;
+}
+html[data-theme="light"] .rt,html[data-theme="light"] .otp-title{color:#1C1C1E!important}
+.tile.on,.sv.on,.ts-btn.on{
+  border-color:var(--acc)!important;
+  background:var(--acl)!important;
+}
+.star-btn.on{color:var(--acc)!important}
+.msg.out .msg-bubble{background:rgba(187,34,53,.92)!important;color:#fff!important}
+.msg.in .msg-bubble{background:rgba(255,255,255,.08)!important;color:var(--w)!important}
+html[data-theme="light"] .msg.in .msg-bubble{background:#fff!important;color:#1C1C1E!important}
