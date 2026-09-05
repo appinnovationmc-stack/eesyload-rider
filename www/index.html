@@ -163,16 +163,16 @@ body{background:var(--bg);transition:background .3s;overscroll-behavior:none;}
 .sched-btn{flex:1;height:44px;background:var(--s2);border:1px solid var(--b);border-radius:12px;font-family:var(--f);font-size:13px;font-weight:600;color:var(--g40);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:all .15s;}
 .sched-btn.on{background:var(--acl);border-color:rgba(187,34,53,.35);color:var(--acc);}
 /* vehicle cards */
-.vc-lbl{padding:20px 20px 12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.4px;color:var(--g60);}
+.vc-lbl{padding:28px 20px 14px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.4px;color:var(--g60);}
 .vcs{display:flex;gap:10px;padding:0 20px 2px;overflow-x:auto;scrollbar-width:none;}
 .vcs::-webkit-scrollbar{display:none;}
-.vc{flex-shrink:0;width:132px;background:var(--s2);border-radius:16px;padding:16px 14px;border:2px solid var(--b);cursor:pointer;transition:all .15s;position:relative;}
+.vc{flex-shrink:0;width:132px;background:var(--s2);border-radius:14px;padding:16px 14px;border:1px solid var(--b);cursor:pointer;transition:all .15s;position:relative;}
 .vc.sel{border-color:var(--acc);background:var(--acl);}
 .vcb{position:absolute;top:-9px;right:10px;background:var(--acc);color:#fff;font-size:9px;font-weight:800;padding:2px 8px;border-radius:100px;}
 .vc-ill{height:44px;display:flex;align-items:center;margin-bottom:10px;}
 .vc-n{font-size:14px;font-weight:700;color:var(--w);margin-bottom:2px;}
 .vc-c{font-size:11px;color:var(--g60);margin-bottom:8px;}
-.vc-p{font-size:15px;font-weight:800;color:var(--w);}
+.vc-p{font-size:15px;font-weight:800;color:var(--w);font-variant-numeric:tabular-nums;}
 .vc.sel .vc-p{color:var(--acc);}
 /* addons */
 .addon-row{display:flex;align-items:center;justify-content:space-between;padding:13px 20px;border-bottom:1px solid var(--b);cursor:pointer;}
@@ -231,12 +231,12 @@ body{background:var(--bg);transition:background .3s;overscroll-behavior:none;}
 .trk-map{height:340px;position:relative;overflow:hidden;background:var(--s1);flex-shrink:0;}
 .trk-top{position:absolute;top:52px;left:0;right:0;padding:10px 20px;display:flex;justify-content:space-between;align-items:center;z-index:10;}
 .gbtn{display:flex;align-items:center;gap:6px;background:rgba(0,0,0,.7);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.1);border-radius:100px;padding:9px 14px;cursor:pointer;font-size:13px;font-weight:600;color:var(--w);}
-.eta-pill{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);background:var(--bg);border-radius:12px;padding:10px 18px;text-align:center;border:1px solid var(--b);box-shadow:0 8px 24px rgba(0,0,0,.6);white-space:nowrap;z-index:8;}
-.eta-t{font-size:22px;font-weight:900;color:var(--w);letter-spacing:-.5px;}
+.eta-pill{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);background:var(--bg);border-radius:12px;padding:10px 18px;text-align:center;border:1px solid var(--b);box-shadow:0 8px 24px rgba(0,0,0,.4);white-space:nowrap;z-index:8;}
+.eta-t{font-size:22px;font-weight:900;color:var(--w);letter-spacing:-.5px;font-variant-numeric:tabular-nums;}
 .eta-l{font-size:11px;color:var(--g60);margin-top:2px;}
 .trk-sheet{flex:1;background:var(--bg);border-radius:22px 22px 0 0;margin-top:-18px;border-top:1px solid var(--b);overflow-y:auto;z-index:5;position:relative;padding-bottom:90px;}
 .trk-sheet::-webkit-scrollbar{width:0;}
-.drv-card{display:flex;align-items:center;gap:14px;padding:18px 20px;border-bottom:1px solid var(--b);}
+.drv-card{display:flex;align-items:center;gap:14px;padding:20px;border-bottom:1px solid var(--b);}
 .drv-av{width:52px;height:52px;border-radius:50%;background:var(--s3);border:2px solid var(--acc);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .drv-info{flex:1;}
 .drv-n{font-size:17px;font-weight:800;color:var(--w);letter-spacing:-.3px;}
@@ -312,7 +312,7 @@ body{background:var(--bg);transition:background .3s;overscroll-behavior:none;}
    11. PROFILE
 ════════════════════════════════════════════ */
 #profile{background:var(--bg);}
-.prof-hdr{padding:56px 20px 22px;border-bottom:1px solid var(--b);}
+.prof-hdr{padding:56px 20px 20px;border-bottom:1px solid var(--b);}
 .prof-top{display:flex;align-items:center;gap:14px;margin-bottom:20px;}
 .prof-av{width:68px;height:68px;border-radius:50%;background:var(--s3);border:1px solid var(--b);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .prof-n{font-size:22px;font-weight:800;color:var(--w);letter-spacing:-.5px;}
@@ -333,13 +333,13 @@ body{background:var(--bg);transition:background .3s;overscroll-behavior:none;}
 .card-visual{margin:8px 20px 0;background:linear-gradient(135deg,var(--s2) 0%,var(--s3) 100%);border-radius:18px;padding:24px;border:1px solid var(--b);position:relative;overflow:hidden;}
 .card-visual::before{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;background:rgba(187,34,53,.06);}
 .card-chip{width:32px;height:24px;background:var(--ylw);border-radius:5px;margin-bottom:20px;opacity:.8;}
-.card-num{font-size:16px;font-weight:600;color:var(--w);letter-spacing:4px;margin-bottom:14px;opacity:.9;}
+.card-num{font-size:16px;font-weight:600;color:var(--w);letter-spacing:4px;margin-bottom:14px;opacity:.9;font-variant-numeric:tabular-nums;}
 .card-row{display:flex;justify-content:space-between;}
 .card-lbl{font-size:10px;color:var(--g60);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px;}
 .card-val{font-size:13px;font-weight:600;color:var(--w);}
-.wallet-card{margin:12px 20px 0;background:var(--s2);border-radius:16px;padding:18px;border:1px solid var(--b);display:flex;align-items:center;justify-content:space-between;}
+.wallet-card{margin:12px 20px 0;background:var(--s2);border-radius:16px;padding:20px;border:1px solid var(--b);display:flex;align-items:center;justify-content:space-between;}
 .wal-l{font-size:14px;font-weight:600;color:var(--w);}
-.wal-bal{font-size:24px;font-weight:900;color:var(--acc);letter-spacing:-.5px;}
+.wal-bal{font-size:24px;font-weight:900;color:var(--acc);letter-spacing:-.5px;font-variant-numeric:tabular-nums;}
 .wal-s{font-size:11px;color:var(--g60);margin-top:3px;}
 .wal-topup{background:var(--acc);color:var(--w);border:none;border-radius:10px;padding:10px 18px;font-family:var(--f);font-size:13px;font-weight:700;cursor:pointer;}
 
@@ -434,10 +434,10 @@ body{background:var(--bg);transition:background .3s;overscroll-behavior:none;}
 .ref-hero{margin:0 20px 16px;background:var(--s2);border-radius:20px;padding:24px;border:1px solid var(--b);text-align:center;position:relative;overflow:hidden;}
 .ref-hero::before{content:'';position:absolute;top:-40px;left:50%;transform:translateX(-50%);width:200px;height:200px;border-radius:50%;background:var(--acl);}
 .ref-title{font-size:26px;font-weight:900;color:var(--w);letter-spacing:-.8px;position:relative;}
-.ref-amount{font-size:52px;font-weight:900;color:var(--acc);letter-spacing:-2px;line-height:1;position:relative;}
+.ref-amount{font-size:52px;font-weight:900;color:var(--acc);letter-spacing:-2px;line-height:1;position:relative;font-variant-numeric:tabular-nums;}
 .ref-amt-sub{font-size:14px;color:var(--g60);margin-top:6px;position:relative;}
 .ref-code-box{background:var(--bg);border-radius:14px;padding:16px;margin-top:16px;border:1px dashed var(--acc);position:relative;}
-.ref-code{font-size:24px;font-weight:900;color:var(--acc);letter-spacing:3px;}
+.ref-code{font-size:24px;font-weight:900;color:var(--acc);letter-spacing:3px;font-variant-numeric:tabular-nums;}
 .ref-code-sub{font-size:11px;color:var(--g60);margin-top:4px;}
 .ref-copy{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:var(--acc);color:#fff;border:none;border-radius:8px;padding:7px 12px;font-family:var(--f);font-size:12px;font-weight:700;cursor:pointer;}
 .ref-steps{margin:0 20px 16px;}
@@ -560,6 +560,8 @@ footer .logo-svg{width:80px;height:auto;}
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://js.paystack.co/v1/inline.js"></script>
 <script src="user-supabase-integration.js"></script>
+<script src="vehicle-icons.js"></script>
+<link rel="stylesheet" href="glass.css">
 </head>
 <body>
 <div class="phone" id="phone">
@@ -706,6 +708,12 @@ footer .logo-svg{width:80px;height:auto;}
         <button class="sched-btn on" onclick="schedSel(this)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><polyline points="12,6 12,12 16,14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg> Now</button>
         <button class="sched-btn" onclick="go('schedule')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2"/><line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" stroke-width="2"/></svg> Schedule</button>
         <button class="sched-btn" onclick="go('business')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="2"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg> Business</button>
+      </div>
+      <div style="padding:0 20px 16px;">
+        <div class="vc-lbl" style="padding:0;margin-bottom:8px;">Not sure? Describe your load</div>
+        <input id="clbInput" placeholder="e.g. I'm moving a bed and a fridge" style="width:100%;box-sizing:border-box;background:rgba(128,128,128,0.12);border:1px solid rgba(128,128,128,0.25);border-radius:10px;padding:10px 12px;font-family:var(--f);font-size:14px;outline:none;color:inherit;">
+        <button class="sched-btn" style="margin-top:8px;" onclick="suggestFromChat()">Suggest a vehicle</button>
+        <div id="clbResult" style="display:none;margin-top:10px;padding:12px;border-radius:10px;background:rgba(128,128,128,0.08);"></div>
       </div>
       <div class="vc-lbl">Choose vehicle</div>
       <div class="vcs" id="vcRow"></div>
@@ -1681,7 +1689,7 @@ async function renderVehicleTiles(){
   }
   row.innerHTML='';
   _cachedVehicleTypes.forEach((v,i)=>{
-    const icon=_vehicleIconMap[v.name]||_vehicleIconMap['_default_truck'];
+    const icon=(typeof eesyVehicleIcon==="function"?eesyVehicleIcon(v.name):(_vehicleIconMap[v.name]||_vehicleIconMap['_default_truck']));
     const tile=document.createElement('div');
     tile.className='tile'+(i===0?' on':'');
     tile.onclick=function(){selTile(this,v);};
@@ -1739,14 +1747,123 @@ async function renderVcCards(){
   });
 }
 
-function selV(el,vehicle){
-  document.querySelectorAll('.vc').forEach(c=>c.classList.remove('sel'));
-  el.classList.add('sel');
+function selVehicleState(vehicle){
   AppState.vehiclePrice=parseFloat(vehicle.base_price)||0;
   AppState.vehiclePerKmRate=parseFloat(vehicle.per_km_rate)||0;
   AppState.vehicleName=vehicle.name;
   AppState.vehicleTypeId=vehicle.id;
   refreshPriceDisplay();
+}
+
+function highlightSelectedVc(vehicleId){
+  const row=document.getElementById('vcRow');
+  if(!row)return;
+  const cards=row.querySelectorAll('.vc');
+  (_cachedVehicleTypes||[]).forEach((v,i)=>{
+    if(cards[i])cards[i].classList.toggle('sel', v.id===vehicleId);
+  });
+}
+
+function selV(el,vehicle){
+  selVehicleState(vehicle);
+  highlightSelectedVc(vehicle.id);
+}
+
+/* ─── CHAT LOAD PARSER (client-side, no API cost) ───────── */
+const ITEM_WEIGHTS_KG={
+  'bunk bed':60,'washing machine':65,'gym equipment':60,'bed':40,'mattress':25,'fridge':70,
+  'refrigerator':70,'freezer':60,'washer':65,'couch':45,'sofa':45,'wardrobe':50,'cupboard':50,
+  'table':20,'chairs':6,'chair':6,'tv':10,'television':10,'microwave':12,'stove':55,'oven':55,
+  'boxes':10,'box':10,'suitcase':15,'bicycle':15,'bike':15,'desk':25,'bookshelf':20,'shelf':15,
+  'dresser':35,'piano':200,'safe':80,'appliances':20,'appliance':20,'furniture':30
+};
+const VEHICLE_CAPACITY_KG={'Moto':20,'Bakkie':500,'Van':1500,'4-Ton':4000,'8-Ton':8000};
+const CHAT_ADDON_KEYWORDS={
+  '146b8170-e080-4760-88ab-cd7e852eeb16':['help','heavy','lift','movers','mover'],
+  '99b522ec-d9bd-47c4-a893-2a9f14ca2486':['fragile','glass','breakable','mirror'],
+  '2054c2e9-996e-4297-a116-0ed146915f27':['valuable','expensive','insure','insurance'],
+  '9ad9a133-87b7-4824-9091-b543ffa5e82c':['urgent','asap','priority','rush']
+};
+let _pendingChatSuggestion=null;
+
+function estimateLoadFromText(text){
+  const lower=text.toLowerCase();
+  let totalWeight=0;
+  const matchedItems=[];
+  Object.keys(ITEM_WEIGHTS_KG).forEach(key=>{
+    const re=new RegExp('(\\d+)?\\s*'+key.replace(/\s+/g,'\\s+')+'s?\\b','gi');
+    let m;
+    while((m=re.exec(lower))){
+      const qty=m[1]?parseInt(m[1],10):1;
+      totalWeight+=ITEM_WEIGHTS_KG[key]*qty;
+      matchedItems.push((qty>1?qty+'x ':'')+key);
+    }
+  });
+  function isNegated(k){
+    const negRe=new RegExp('\\b(no|not|nothing|without)\\b(?:\\s+\\w+){0,3}\\s+'+k,'i');
+    return negRe.test(lower);
+  }
+  const suggestedAddonIds=[];
+  Object.keys(CHAT_ADDON_KEYWORDS).forEach(id=>{
+    if(CHAT_ADDON_KEYWORDS[id].some(k=>lower.includes(k)&&!isNegated(k)))suggestedAddonIds.push(id);
+  });
+  return {totalWeight,matchedItems,suggestedAddonIds};
+}
+
+function pickVehicleNameForWeight(weightKg){
+  const order=['Moto','Bakkie','Van','4-Ton','8-Ton'];
+  for(let i=0;i<order.length;i++){
+    if(weightKg<=VEHICLE_CAPACITY_KG[order[i]])return order[i];
+  }
+  return '8-Ton';
+}
+
+async function suggestFromChat(){
+  const input=document.getElementById('clbInput');
+  const text=(input?input.value:'').trim();
+  const resultEl=document.getElementById('clbResult');
+  if(!text){
+    if(input){input.style.borderColor='#FF3B30';setTimeout(()=>input.style.borderColor='',1200);}
+    return;
+  }
+  if(!_cachedVehicleTypes||!_cachedVehicleTypes.length){
+    try{_cachedVehicleTypes=await getVehicleTypes();}catch(e){console.error('Could not load vehicle types',e);return;}
+  }
+  const {totalWeight,matchedItems,suggestedAddonIds}=estimateLoadFromText(text);
+  const vehicleName=totalWeight>0?pickVehicleNameForWeight(totalWeight):'Bakkie';
+  const vehicle=_cachedVehicleTypes.find(v=>v.name===vehicleName)||_cachedVehicleTypes[0];
+  _pendingChatSuggestion={vehicle:vehicle,suggestedAddonIds:suggestedAddonIds};
+  if(resultEl){
+    resultEl.style.display='block';
+    resultEl.innerHTML=
+      '<div class="addon-n">Recommended: '+vehicle.name+'</div>'+
+      '<div class="addon-s">'+(matchedItems.length?('Detected: '+matchedItems.join(', ')+' (~'+totalWeight+'kg)'):'Could not detect specific items — defaulting to '+vehicle.name)+'</div>'+
+      '<button class="sched-btn on" style="margin-top:10px;" onclick="applyChatSuggestion()">Use '+vehicle.name+'</button>';
+  }
+}
+
+async function applyChatSuggestion(){
+  if(!_pendingChatSuggestion)return;
+  const vehicle=_pendingChatSuggestion.vehicle;
+  const suggestedAddonIds=_pendingChatSuggestion.suggestedAddonIds;
+  selVehicleState(vehicle);
+  highlightSelectedVc(vehicle.id);
+  if(suggestedAddonIds.length){
+    let addons=[];
+    try{addons=await getServiceAddons();}catch(e){addons=[];}
+    suggestedAddonIds.forEach(id=>{
+      const a=addons.find(function(x){return x.id===id;});
+      if(a&&!AppState.addons.find(function(x){return x.id===a.id;})){
+        AppState.addons.push({id:a.id,name:a.name,price:parseFloat(a.price)||0});
+      }
+    });
+    renderAddonRows();
+  }
+  refreshPriceDisplay();
+  const resultEl=document.getElementById('clbResult');
+  if(resultEl)resultEl.style.display='none';
+  const input=document.getElementById('clbInput');
+  if(input)input.value='';
 }
 const _addonIconMap={
   'helpers':'<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="7" r="3" stroke="white" stroke-width="2"/><path d="M3 21c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="white" stroke-width="2" stroke-linecap="round"/><circle cx="17" cy="7" r="3" stroke="white" stroke-width="2"/><path d="M14 21c0-2 1.5-5 6-5" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>',
@@ -1759,8 +1876,13 @@ const _addonIconMap={
 async function renderAddonRows(){
   const container=document.getElementById('addonRow');
   if(!container)return;
+  container.innerHTML='<div style="padding:13px 20px;font-size:13px;color:var(--g60);">Loading add-ons…</div>';
   let addons=[];
-  try{addons=await getServiceAddons();}catch(e){console.error('Could not load add-ons',e);return;}
+  try{addons=await getServiceAddons();}catch(e){
+    console.error('Could not load add-ons',e);
+    container.innerHTML='<div style="padding:13px 20px;font-size:13px;color:var(--g60);">Could not load add-ons — <span style="text-decoration:underline;cursor:pointer;" onclick="renderAddonRows()">tap to retry</span></div>';
+    return;
+  }
   container.innerHTML='';
   addons.forEach(a=>{
     const icon=_addonIconMap[a.icon_key]||_addonIconMap['_default'];
@@ -1892,7 +2014,11 @@ async function findDriver(){
   try{
     const booking=await createBooking({
       pickup_address: AppState.pickup,
+      pickup_lat: AppState.pickupLat||null,
+      pickup_lng: AppState.pickupLng||null,
       dropoff_address: AppState.dropoff,
+      dropoff_lat: AppState.dropoffLat||null,
+      dropoff_lng: AppState.dropoffLng||null,
       vehicle_name: AppState.vehicleName,
       vehicle_type_id: AppState.vehicleTypeId,
       base_fare: AppState.vehiclePrice,
@@ -1976,7 +2102,20 @@ async function cancelLoad(){
   go('home');
 }
 
-function markDelivered(){
+async function markDelivered(){
+  const id = (typeof AppState!=='undefined' && (AppState.currentBookingId||AppState.activeBookingId|| (AppState.currentBooking&&AppState.currentBooking.id)));
+  if(!id){alert('No active booking to complete.');return;}
+  try{
+    if(typeof updateBookingStatus==='function'){
+      await updateBookingStatus(id,'delivered');
+    }else{
+      const {error}=await sb.from('bookings').update({status:'delivered',delivered_at:new Date().toISOString()}).eq('id',id).eq('rider_id',(await sbGetCurrentUser()).id);
+      if(error) throw error;
+    }
+  }catch(e){
+    alert(e.message||'Could not complete booking');
+    return;
+  }
   saveLoadToHistory('completed');
   go('delivered');
 }
@@ -2971,5 +3110,6 @@ function startTrk(){
 })();
 </script>
 
+<script src="rider-ui-fix.js"></script>
 </body>
 </html>

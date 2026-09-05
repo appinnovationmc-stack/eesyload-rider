@@ -14,7 +14,11 @@ export default {
 
       const {
         pickup_address,
+        pickup_lat,
+        pickup_lng,
         dropoff_address,
+        dropoff_lat,
+        dropoff_lng,
         vehicle_type_id,
         addon_ids,
         load_weight_kg,
@@ -134,7 +138,11 @@ export default {
           rider_id: user.id,
           quote_id: quote.id,
           pickup_address,
+          pickup_lat: pickup_lat ?? null,
+          pickup_lng: pickup_lng ?? null,
           dropoff_address,
+          dropoff_lat: dropoff_lat ?? null,
+          dropoff_lng: dropoff_lng ?? null,
           vehicle_type_id: vehicle.id,
           vehicle_name: vehicle.name,
           base_fare: basePrice,
