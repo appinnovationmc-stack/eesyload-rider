@@ -1,0 +1,25 @@
+/* EesyLoad Rider — glass overlay. Load after inline CSS. */
+html, html[data-theme="dark"], :root{
+  --bg:#000; --s1:rgba(22,22,24,.82); --w:#F5F5F7; --acc:#BB2235;
+  color-scheme:dark;
+}
+html[data-theme="light"]{
+  --bg:#F2F2F7; --s1:rgba(255,255,255,.88); --w:#1C1C1E;
+  color-scheme:light;
+}
+html,body,.phone{background:var(--bg)!important;color:var(--w)!important;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,sans-serif!important}
+.sb,.di,#sbtime{display:none!important}
+.cta.grn,.cta.acc,.btn-red{
+  background:linear-gradient(180deg,#D12B40,#BB2235)!important;color:#fff!important;border:0!important;border-radius:14px!important}
+.gbtn,.back,.chip,.eta-pill{
+  background:rgba(22,22,24,.72)!important;backdrop-filter:blur(24px);border:.5px solid rgba(255,255,255,.12)!important;color:var(--w)!important}
+html[data-theme="light"] .gbtn,
+html[data-theme="light"] .back,
+html[data-theme="light"] .chip{
+  background:rgba(255,255,255,.86)!important;color:#1C1C1E!important;border:.5px solid rgba(0,0,0,.08)!important}
+.det-card,.drv-card,.addon-row{
+  background:rgba(22,22,24,.78)!important;border:.5px solid rgba(255,255,255,.12)!important;backdrop-filter:blur(32px)}
+html[data-theme="light"] .det-card,
+html[data-theme="light"] .drv-card{
+  background:rgba(255,255,255,.9)!important;color:#1C1C1E!important}
