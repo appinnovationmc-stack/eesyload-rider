@@ -1659,6 +1659,7 @@ const AppState={
   scheduled:false,
   scheduledDate:null,
   scheduledTime:null,
+  scheduledFor:null,
   isBusiness:false,
   driver:{name:'Sipho Nkosi',vehicle:'Toyota Hilux · CA 123-456',rating:4.9,loads:312},
   fare:0,
@@ -2103,7 +2104,8 @@ async function findDriver(){
       addons: AppState.addons,
       addons_total: AppState.addons.reduce((s,a)=>s+a.price,0),
       paystack_reference: window._pendingPaystackRef || null,
-      payment_method: AppState.paymentMethod || 'paystack_card'
+      payment_method: AppState.paymentMethod || 'paystack_card',
+      scheduled_for: AppState.scheduledFor || null
     });
     AppState.currentBookingId=booking.id;
     if(AppState.bookingSub){sb.removeChannel(AppState.bookingSub);}
@@ -2479,9 +2481,12 @@ function rateStar(n){
     if(i<n){b.classList.add('lit');b.innerHTML='<svg width="22" height="22" viewBox="0 0 24 22"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="var(--ylw)"/></svg>';}
     else{b.classList.remove('lit');b.innerHTML='<svg width="22" height="22" viewBox="0 0 24 22"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" stroke="var(--ylw)" stroke-width="1.5" fill="none"/></svg>';}
   });
-  // update the just-saved load with the rating
   const loads=getLoads();
   if(loads.length){loads[0].rating=n;localStorage.setItem('el-loads',JSON.stringify(loads));}
+  const bookingId=AppState.currentBookingId||(AppState.currentBooking&&AppState.currentBooking.id);
+  if(bookingId&&typeof rateBookingDriver==='function'){
+    rateBookingDriver(bookingId,n).catch(e=>console.error('Could not save rating',e));
+  }
 }
 
 /* ─── SOS ──────────────────────────────── */
@@ -2559,14 +2564,44 @@ function confirmScheduledLoad(){
   AppState.scheduled=true;
   AppState.scheduledDate=schedSelectedDate;
   AppState.scheduledTime=schedSelectedTime;
+  try{
+    const monthLbl=(document.getElementById('calMonth')||{}).textContent||'';
+    const yearMatch=monthLbl.match(/(\d{4})/);
+    const year=yearMatch?yearMatch[1]:String(new Date().getFullYear());
+    const dayMatch=String(schedSelectedDate).match(/(\d{1,2})\s*$/);
+    const day=dayMatch?dayMatch[1]:'1';
+    const monthNames={january:0,february:1,march:2,april:3,may:4,june:5,july:6,august:7,september:8,october:9,november:10,december:11};
+    const monKey=String(schedSelectedDate).toLowerCase().replace(/[^a-z]/g,'');
+    let month=null;
+    for(const k in monthNames){if(monKey.startsWith(k.slice(0,3))||monKey.includes(k)){month=monthNames[k];break;}}
+    if(month==null){
+      const fromLbl=monthLbl.toLowerCase();
+      for(const k in monthNames){if(fromLbl.includes(k)){month=monthNames[k];break;}}
+    }
+    let hours=9, minutes=0;
+    const t=String(schedSelectedTime).trim();
+    const ampm=t.match(/(\d{1,2}):(\d{2})\s*(AM|PM)?/i);
+    if(ampm){
+      hours=parseInt(ampm[1],10); minutes=parseInt(ampm[2],10);
+      if(ampm[3]){
+        const ap=ampm[3].toUpperCase();
+        if(ap==='PM'&&hours<12)hours+=12;
+        if(ap==='AM'&&hours===12)hours=0;
+      }
+    }
+    if(month==null)month=new Date().getMonth();
+    const local=new Date(Number(year), month, Number(day), hours, minutes, 0);
+    AppState.scheduledFor=!isNaN(local.getTime())?local.toISOString():null;
+  }catch(e){console.error(e);AppState.scheduledFor=null;}
   go('confirm');
 }
 
 /* ─── BUSINESS APPLICATION ─────────────── */
-function submitBusinessApplication(){
-  const name=document.getElementById('bizName').value.trim();
-  const reg=document.getElementById('bizReg').value.trim();
-  const email=document.getElementById('bizEmail').value.trim();
+async function submitBusinessApplication(){
+  const name=(document.getElementById('bizName')||{}).value?.trim()||'';
+  const reg=(document.getElementById('bizReg')||{}).value?.trim()||'';
+  const email=(document.getElementById('bizEmail')||{}).value?.trim()||'';
+  const phone=(document.getElementById('bizPhone')||{}).value?.trim()||'';
   if(!name||!reg||!email){
     alert('Please fill in company name, registration number, and business email.');
     return;
@@ -2575,8 +2610,16 @@ function submitBusinessApplication(){
     alert('Please enter a valid business email address.');
     return;
   }
-  alert('Business account application submitted for '+name+'. We will verify your details within 24 hours.');
-  go('profile');
+  try{
+    if(typeof submitBusinessApplicationToSupabase==='function'){
+      await submitBusinessApplicationToSupabase({company_name:name,registration:reg,email:email,phone:phone});
+    }
+    alert('Business account application submitted for '+name+'. We will verify your details within 24 hours.');
+    go('profile');
+  }catch(e){
+    console.error(e);
+    alert('Could not submit application: '+(e.message||e));
+  }
 }
 
 /* ─── PROFILE ACTIONS ──────────────────── */
