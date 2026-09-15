@@ -1623,7 +1623,21 @@ function go(id){
   if(id==='history')renderHistoryList();
   if(id==='profile')renderProfileScreen();
 }
-setTimeout(()=>go('onboard'),2700);
+setTimeout(async ()=>{
+  try{
+    const {data:{session}} = await sb.auth.getSession();
+    if(session && session.user){
+      const profile = await getRiderProfile().catch(()=>null);
+      if(profile && profile.full_name){
+        go('home');
+        return;
+      }
+      go('riderName');
+      return;
+    }
+  }catch(e){ console.error('boot session check failed', e); }
+  go('onboard');
+}, 2700);
 
 // Init theme: saved preference, else system preference, else dark
 (function(){
@@ -3026,6 +3040,8 @@ function startTrk(){
     if(btn){btn.disabled=true;btn.textContent='Saving…';}
     try{
       await sbUpdateRiderName(name);
+      // Force profile re-read next time so we don't ask for name again
+      try{ AppState.riderName = name; }catch(e){}
       go('home');
     }catch(e){
       if(errEl)errEl.textContent='Could not save your name: '+e.message;
