@@ -352,3 +352,55 @@ async function submitBusinessApplicationToSupabase({ company_name, registration,
   return data;
 }
 
+
+/* ─── SOCIAL AUTH (Uber-style) ───────────────────────────── */
+function authRedirectTo() {
+  // Prefer current origin (web / capacitor server); fallback to site URL
+  try {
+    if (window.location && window.location.origin && window.location.origin !== 'null') {
+      return window.location.origin + window.location.pathname;
+    }
+  } catch (e) {}
+  return 'https://mbtqqnbklcltrtwlpduq.supabase.co';
+}
+
+async function sbSignInWithGoogle() {
+  const { data, error } = await sb.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo: authRedirectTo(),
+      queryParams: { access_type: 'offline', prompt: 'consent' },
+    },
+  });
+  if (error) throw error;
+  return data;
+}
+
+async function sbSignInWithApple() {
+  const { data, error } = await sb.auth.signInWithOAuth({
+    provider: 'apple',
+    options: { redirectTo: authRedirectTo() },
+  });
+  if (error) throw error;
+  return data;
+}
+
+/** After OAuth redirect, ensure a rider profile row exists. */
+async function ensureRiderProfileFromSession() {
+  const user = await sbGetCurrentUser();
+  if (!user) return null;
+  const { data: existing } = await sb.from('profiles').select('id,role,full_name').eq('id', user.id).maybeSingle();
+  if (!existing) {
+    const meta = user.user_metadata || {};
+    const name = meta.full_name || meta.name || meta.fullName || '';
+    const phone = user.phone || meta.phone || null;
+    await sb.from('profiles').insert({
+      id: user.id,
+      role: 'rider',
+      full_name: name || null,
+      phone: phone,
+    });
+  }
+  return user;
+}
+
