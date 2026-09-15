@@ -1485,9 +1485,32 @@ async function initTrackingMap(){
     trkDirRenderer=new google.maps.DirectionsRenderer({map:trkMap,suppressMarkers:true,polylineOptions:{strokeColor:'#BB2235',strokeWeight:5}});
   }
 
+  function trackingRouteDestination(){
+    // Align with driver phases: en route to pickup until in_transit, then drop-off
+    const st=(AppState.bookingStatus||(AppState.currentBooking&&AppState.currentBooking.status)||'');
+    if(st==='in_transit'){
+      if(AppState.dropoffLat!=null&&AppState.dropoffLng!=null){
+        return {lat:Number(AppState.dropoffLat),lng:Number(AppState.dropoffLng)};
+      }
+      return AppState.dropoff||null;
+    }
+    if(AppState.pickupLat!=null&&AppState.pickupLng!=null){
+      return {lat:Number(AppState.pickupLat),lng:Number(AppState.pickupLng)};
+    }
+    return AppState.pickup||null;
+  }
   function routeAndUpdateEta(driverPos){
-    const dest=AppState.pickup;
+    const dest=trackingRouteDestination();
     if(!dest)return;
+    const destKey=typeof dest==='string'?dest:(dest.lat+','+dest.lng);
+    // Avoid spamming Directions when nothing meaningful changed
+    if(AppState._trkLastDestKey===destKey&&AppState._trkLastOrigin){
+      const o=AppState._trkLastOrigin;
+      const dlat=Math.abs(o.lat-driverPos.lat)+Math.abs(o.lng-driverPos.lng);
+      if(dlat<0.0003)return; // ~30m
+    }
+    AppState._trkLastDestKey=destKey;
+    AppState._trkLastOrigin={lat:driverPos.lat,lng:driverPos.lng};
     const svc=new google.maps.DirectionsService();
     svc.route({origin:driverPos,destination:dest,travelMode:google.maps.TravelMode.DRIVING},(res,status)=>{
       if(status==='OK'){
@@ -1496,9 +1519,16 @@ async function initTrackingMap(){
         const etaEl=document.getElementById('trkEtaText');
         if(etaEl)etaEl.textContent=leg.duration.text;
         AppState.lastKnownEtaText=leg.duration.text;
+        const phaseEl=document.getElementById('trkPhaseText');
+        if(phaseEl){
+          phaseEl.textContent=(AppState.bookingStatus==='in_transit')?'En route to drop-off':'Driver en route to you';
+        }
       }
     });
   }
+  // Expose so status changes can force a re-route
+  window.routeAndUpdateEta=routeAndUpdateEta;
+  window.trackingRouteDestination=trackingRouteDestination;
 
   // Initial fetch — show last known position immediately, don't wait for a live update
   try{
@@ -1633,6 +1663,7 @@ const AppState={
   driver:{name:'Sipho Nkosi',vehicle:'Toyota Hilux · CA 123-456',rating:4.9,loads:312},
   fare:0,
   currentBookingId:null,
+  bookingStatus:null,
   bookingSub:null,
   paymentMethod:'paystack_card' // 'paystack_card' | 'cash'
 };
@@ -2077,6 +2108,17 @@ async function findDriver(){
     AppState.currentBookingId=booking.id;
     if(AppState.bookingSub){sb.removeChannel(AppState.bookingSub);}
     AppState.bookingSub=subscribeToBookingUpdates(booking.id, async(updated)=>{
+      AppState.currentBooking=updated;
+      const prevStatus=AppState.bookingStatus;
+      AppState.bookingStatus=updated.status;
+      // When phase flips to in_transit, force a new route to drop-off
+      if(updated.status==='in_transit' && prevStatus!=='in_transit' && typeof window.routeAndUpdateEta==='function'){
+        AppState._trkLastDestKey=null;
+        if(AppState.driver&&trkDriverMarker){
+          const pos=trkDriverMarker.getPosition();
+          if(pos)window.routeAndUpdateEta({lat:pos.lat(),lng:pos.lng()});
+        }
+      }
       if(updated.status==='accepted' && updated.driver_id){
         try{
           const driver=await getDriverProfile(updated.driver_id);
