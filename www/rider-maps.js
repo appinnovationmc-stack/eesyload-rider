@@ -10,12 +10,25 @@
       try { trkDriverMarker.setIcon(eesyPin('driver')); } catch (e) {}
     }
   }
+  // Match driver phases: pickup until in_transit, then drop-off
   function trackingDest() {
-    const st = (window.AppState && (AppState.currentBooking && AppState.currentBooking.status)) || '';
-    if (st === 'in_transit' || st === 'loading') return AppState.dropoff || AppState.dropoff_address;
-    return AppState.pickup || AppState.pickup_address;
+    const st =
+      (window.AppState &&
+        (AppState.bookingStatus ||
+          (AppState.currentBooking && AppState.currentBooking.status))) ||
+      '';
+    if (st === 'in_transit') {
+      if (AppState.dropoffLat != null && AppState.dropoffLng != null) {
+        return { lat: Number(AppState.dropoffLat), lng: Number(AppState.dropoffLng) };
+      }
+      return AppState.dropoff || AppState.dropoff_address || null;
+    }
+    if (AppState.pickupLat != null && AppState.pickupLng != null) {
+      return { lat: Number(AppState.pickupLat), lng: Number(AppState.pickupLng) };
+    }
+    return AppState.pickup || AppState.pickup_address || null;
   }
-  const origRoute = window.routeAndUpdateEta;
+  window.trackingDest = trackingDest;
   document.addEventListener('DOMContentLoaded', function () {
     setTimeout(styleAll, 600);
     setTimeout(styleAll, 2000);
