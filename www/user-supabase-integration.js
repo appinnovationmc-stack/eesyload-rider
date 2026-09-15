@@ -150,9 +150,11 @@ async function createBooking(booking) {
     }),
   });
 
-  const result = await res.json();
+  const result = await res.json().catch(() => ({}));
   if (!res.ok) {
-    throw new Error(result.error || 'Could not create booking');
+    console.error('createBooking failed', res.status, result);
+    const msg = result.error || result.message || result.msg || JSON.stringify(result) || ('HTTP ' + res.status);
+    throw new Error(msg);
   }
   return result.booking;
 }
@@ -339,8 +341,7 @@ async function submitBusinessApplicationToSupabase({ company_name, registration,
     'Email: ' + (email || '—'),
     'Phone: ' + (phone || '—'),
     notes ? ('Notes: ' + notes) : null,
-  ].filter(Boolean).join('
-');
+  ].filter(Boolean).join('\n');
   const { data, error } = await sb.from('support_tickets').insert({
     user_id: user.id,
     subject,
@@ -354,8 +355,22 @@ async function submitBusinessApplicationToSupabase({ company_name, registration,
 
 
 /* ─── SOCIAL AUTH (Uber-style) ───────────────────────────── */
+// Custom URL scheme this app registers in AndroidManifest.xml. A native
+// Capacitor WebView has no internet-reachable origin to redirect back to
+// (window.location.origin resolves to https://localhost, which the system
+// browser can't reach), so OAuth on native must round-trip through a
+// custom scheme deep link instead of a normal https redirect.
+const OAUTH_NATIVE_REDIRECT = 'eesyloadrider://auth-callback';
+
+function isNativeApp() {
+  try {
+    return !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
+  } catch (e) { return false; }
+}
+
 function authRedirectTo() {
-  // Prefer current origin (web / capacitor server); fallback to site URL
+  if (isNativeApp()) return OAUTH_NATIVE_REDIRECT;
+  // Web: prefer current origin (normal page-reload redirect flow).
   try {
     if (window.location && window.location.origin && window.location.origin !== 'null') {
       return window.location.origin + window.location.pathname;
@@ -364,25 +379,84 @@ function authRedirectTo() {
   return 'https://mbtqqnbklcltrtwlpduq.supabase.co';
 }
 
+/** Opens the given OAuth URL. On native, uses the in-app browser (system
+ *  WebView can't itself navigate to an external https URL and back via a
+ *  custom scheme); on web, does a normal same-tab redirect. */
+async function openAuthUrl(url) {
+  if (isNativeApp() && window.Capacitor.Plugins && window.Capacitor.Plugins.Browser) {
+    await window.Capacitor.Plugins.Browser.open({ url });
+  } else {
+    window.location.href = url;
+  }
+}
+
 async function sbSignInWithGoogle() {
   const { data, error } = await sb.auth.signInWithOAuth({
     provider: 'google',
     options: {
       redirectTo: authRedirectTo(),
       queryParams: { access_type: 'offline', prompt: 'consent' },
+      skipBrowserRedirect: isNativeApp(),
     },
   });
   if (error) throw error;
+  if (isNativeApp() && data && data.url) await openAuthUrl(data.url);
   return data;
 }
 
 async function sbSignInWithApple() {
   const { data, error } = await sb.auth.signInWithOAuth({
     provider: 'apple',
-    options: { redirectTo: authRedirectTo() },
+    options: {
+      redirectTo: authRedirectTo(),
+      skipBrowserRedirect: isNativeApp(),
+    },
   });
   if (error) throw error;
+  if (isNativeApp() && data && data.url) await openAuthUrl(data.url);
   return data;
+}
+
+/** Registered once at boot (native only). Catches the eesyloadrider://
+ *  deep link the system browser hands back after Google/Apple auth,
+ *  closes the in-app browser, and exchanges the code for a session. */
+function initNativeOAuthListener(onSessionReady) {
+  if (!isNativeApp() || !window.Capacitor.Plugins || !window.Capacitor.Plugins.App) return;
+  window.Capacitor.Plugins.App.addListener('appUrlOpen', async function (event) {
+    const url = event && event.url;
+    if (!url || url.indexOf('eesyloadrider://auth-callback') !== 0) return;
+    try {
+      if (window.Capacitor.Plugins.Browser) {
+        try { await window.Capacitor.Plugins.Browser.close(); } catch (e) {}
+      }
+      const parsed = new URL(url);
+      // This project's OAuth callback returns session tokens directly in
+      // the fragment (#access_token=...&refresh_token=...), not a ?code=
+      // to exchange -- confirmed against the actual redirect URL, not
+      // assumed from the PKCE docs.
+      const hashParams = new URLSearchParams(parsed.hash.replace(/^#/, ''));
+      const queryError = parsed.searchParams.get('error_description') || parsed.searchParams.get('error');
+      const hashError = hashParams.get('error_description') || hashParams.get('error');
+      if (queryError || hashError) throw new Error(queryError || hashError);
+
+      const accessToken = hashParams.get('access_token');
+      const refreshToken = hashParams.get('refresh_token');
+      if (accessToken && refreshToken) {
+        const { error } = await sb.auth.setSession({ access_token: accessToken, refresh_token: refreshToken });
+        if (error) throw error;
+      } else {
+        // Fallback in case this project ever switches to PKCE for OAuth.
+        const code = parsed.searchParams.get('code');
+        if (!code) throw new Error('No session tokens or auth code in redirect. Raw URL: ' + url);
+        const { error } = await sb.auth.exchangeCodeForSession(code);
+        if (error) throw error;
+      }
+      if (typeof onSessionReady === 'function') onSessionReady();
+    } catch (e) {
+      console.error('OAuth deep link exchange failed', e);
+      alert('Sign-in failed: ' + (e.message || e));
+    }
+  });
 }
 
 /** After OAuth redirect, ensure a rider profile row exists. */
