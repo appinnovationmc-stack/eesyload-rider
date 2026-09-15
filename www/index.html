@@ -1625,9 +1625,14 @@ function go(id){
 }
 setTimeout(async ()=>{
   try{
-    const {data:{session}} = await sb.auth.getSession();
+    const sessionPromise = sb.auth.getSession();
+    const timeoutPromise = new Promise((_,rej)=>setTimeout(()=>rej(new Error('boot timeout')), 4000));
+    const {data:{session}} = await Promise.race([sessionPromise, timeoutPromise]);
     if(session && session.user){
-      const profile = await getRiderProfile().catch(()=>null);
+      const profile = await Promise.race([
+        getRiderProfile().catch(()=>null),
+        new Promise(r=>setTimeout(()=>r(null), 3000))
+      ]);
       if(profile && profile.full_name){
         go('home');
         return;
@@ -1637,7 +1642,7 @@ setTimeout(async ()=>{
     }
   }catch(e){ console.error('boot session check failed', e); }
   go('onboard');
-}, 2700);
+}, 1800);
 
 // Init theme: saved preference, else system preference, else dark
 (function(){
