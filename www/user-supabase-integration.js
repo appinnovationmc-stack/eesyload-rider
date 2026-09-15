@@ -21,7 +21,13 @@ async function sbVerifyOtp(phone, token) {
 
 async function sbUpdateRiderName(fullName) {
   const user = await sbGetCurrentUser();
-  const { error } = await sb.from('profiles').update({ full_name: fullName }).eq('id', user.id);
+  if (!user) throw new Error('Not signed in');
+  const { error } = await sb.from('profiles').upsert({
+    id: user.id,
+    role: 'rider',
+    full_name: fullName,
+    phone: user.phone || null,
+  }, { onConflict: 'id' });
   if (error) throw error;
   return true;
 }
@@ -203,9 +209,24 @@ async function getDriverProfile(driverId) {
 async function getRiderProfile() {
   const user = await sbGetCurrentUser();
   if (!user) throw new Error('Not signed in');
-  const { data, error } = await sb.from('profiles').select('full_name,phone,avatar_url').eq('id', user.id).single();
+  const { data, error } = await sb.from('profiles')
+    .select('full_name,phone,avatar_url')
+    .eq('id', user.id)
+    .maybeSingle();
   if (error) throw error;
-  return data;
+  if (data && data.full_name) return data;
+  const meta = (user.user_metadata) || {};
+  const metaName = meta.full_name || meta.name || meta.fullName || '';
+  if (metaName) {
+    try {
+      await sb.from('profiles').upsert({
+        id: user.id, role: 'rider', full_name: metaName,
+        phone: user.phone || meta.phone || null,
+      }, { onConflict: 'id' });
+    } catch (e) { console.warn(e); }
+    return { full_name: metaName, phone: user.phone || null, avatar_url: meta.avatar_url || null };
+  }
+  return data || { full_name: null, phone: user.phone || null, avatar_url: null };
 }
 
 async function cancelBookingAsRider(bookingId) {
