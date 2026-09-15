@@ -136,7 +136,11 @@ async function createBooking(booking) {
     },
     body: JSON.stringify({
       pickup_address: booking.pickup_address,
+      pickup_lat: booking.pickup_lat ?? null,
+      pickup_lng: booking.pickup_lng ?? null,
       dropoff_address: booking.dropoff_address,
+      dropoff_lat: booking.dropoff_lat ?? null,
+      dropoff_lng: booking.dropoff_lng ?? null,
       vehicle_type_id: booking.vehicle_type_id,
       addon_ids: (booking.addons || []).map(a => a.id).filter(Boolean),
       claimed_total_fare: booking.total_fare,
