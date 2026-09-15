@@ -145,6 +145,7 @@ async function createBooking(booking) {
       addon_ids: (booking.addons || []).map(a => a.id).filter(Boolean),
       claimed_total_fare: booking.total_fare,
       paystack_reference: booking.paystack_reference || null,
+      payment_method: booking.payment_method || 'paystack_card',
     }),
   });
 
