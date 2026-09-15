@@ -2067,6 +2067,15 @@ async function payAndFindDriver(){
   const btn = document.querySelector('[onclick="payAndFindDriver()"]');
   if(btn){ btn.disabled = true; btn.textContent = 'Opening payment...'; }
 
+  // ── CASH PATH: skip Paystack completely ──────────────────────────
+  if(AppState.paymentMethod === 'cash'){
+    window._pendingPaystackRef = null;
+    if(btn){ btn.textContent = 'Requesting driver...'; }
+    findDriver();
+    return;
+  }
+
+  // ── CARD PATH (Paystack) ─────────────────────────────────────────
   const methods = await getEnabledPaymentMethods();
   const paystackMethod = methods.find(m => m.provider === 'paystack');
   if(!paystackMethod || !paystackMethod.config || !paystackMethod.config.public_key){
@@ -3357,7 +3366,12 @@ async function bootAuthSessionRider(){
 }
 
 // Boot session after OAuth redirect
-document.addEventListener('DOMContentLoaded',function(){setTimeout(bootAuthSessionRider,400);});
+document.addEventListener('DOMContentLoaded',function(){
+  setTimeout(bootAuthSessionRider,400);
+  if (typeof initNativeOAuthListener === 'function') {
+    initNativeOAuthListener(bootAuthSessionRider);
+  }
+});
 </script>
 </body>
 </html>
