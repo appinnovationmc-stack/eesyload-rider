@@ -1,3 +1,4 @@
 .DS_Store
 android/app/keystore.properties
 android/app/keystore/
+node_modules/

@@ -1965,8 +1965,24 @@ function renderConfirmScreen(){
   if(payBtn){ payBtn.disabled = false; payBtn.textContent = 'Find my driver'; }
 }
 
+/* ─── PAYMENT METHODS (admin-controlled via Supabase) ──── */
+let _paymentMethodsCache = null;
+async function getEnabledPaymentMethods(){
+  if(_paymentMethodsCache) return _paymentMethodsCache;
+  const { data, error } = await sb
+    .from('payment_methods')
+    .select('key, display_name, provider, method_type, config')
+    .eq('enabled', true)
+    .order('sort_order');
+  if(error){
+    console.error('Could not load payment methods', error);
+    return [];
+  }
+  _paymentMethodsCache = data || [];
+  return _paymentMethodsCache;
+}
+
 /* ─── PAYSTACK CHECKOUT ─────────────────── */
-const PAYSTACK_PUBLIC_KEY = 'pk_test_8191cf081f24b479e052e1233b0b130373325d1f';
 
 function closeConfirmIfSafe(){
   if(window._paymentInProgress){
@@ -1983,13 +1999,21 @@ async function payAndFindDriver(){
   const btn = document.querySelector('[onclick="payAndFindDriver()"]');
   if(btn){ btn.disabled = true; btn.textContent = 'Opening payment...'; }
 
+  const methods = await getEnabledPaymentMethods();
+  const paystackMethod = methods.find(m => m.provider === 'paystack');
+  if(!paystackMethod || !paystackMethod.config || !paystackMethod.config.public_key){
+    alert('Card payment is not available right now. Please try again shortly.');
+    if(btn){ btn.disabled = false; btn.textContent = 'Find my driver'; }
+    return;
+  }
+
   let rawIdentifier = (user && (user.phone || user.id)) ? (user.phone || user.id) : 'guest';
   let safeIdentifier = String(rawIdentifier).replace(/[^a-zA-Z0-9]/g, '');
   if(!safeIdentifier) safeIdentifier = 'rider' + Date.now();
   const emailForPaystack = safeIdentifier + '@riders.eesyload.com';
   console.log('Paystack email:', emailForPaystack, 'user:', user);
   const handler = PaystackPop.setup({
-    key: PAYSTACK_PUBLIC_KEY,
+    key: paystackMethod.config.public_key,
     email: emailForPaystack,
     amount: Math.round(amountZAR * 100), // Paystack expects kobo/cents
     currency: 'ZAR',
