@@ -3099,7 +3099,7 @@ function startTrk(){
     try{
       const user=await sbVerifyOtp(_riderPhone, code);
       if(btnEl){btnEl.disabled=false;btnEl.textContent='Verify →';}
-      const{data:profile}=await sb.from('profiles').select('full_name').eq('id',user.id).single();
+      const profile=await getRiderProfile().catch(()=>null);
       if(profile&&profile.full_name){
         go('home');
       }else{

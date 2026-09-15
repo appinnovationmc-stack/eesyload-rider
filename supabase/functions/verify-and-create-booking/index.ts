@@ -2,7 +2,9 @@ import "@supabase/functions-js/edge-runtime.d.ts";
 import { withSupabase } from "@supabase/server";
 
 const GOOGLE_MAPS_SERVER_KEY = Deno.env.get("GOOGLE_MAPS_SERVER_KEY")!;
+const PAYSTACK_SECRET_KEY = Deno.env.get("PAYSTACK_SECRET_KEY");
 const FARE_TOLERANCE_RAND = 2;
+const AMOUNT_TOLERANCE_KOBO = 200;
 
 export default {
   fetch: withSupabase({ auth: 'user' }, async (req, ctx) => {
@@ -10,6 +12,24 @@ export default {
       const user = ctx.userClaims;
       if (!user) {
         return Response.json({ error: "Not signed in" }, { status: 401 });
+      }
+
+      // Guard against the rider_id FK violation on bookings insert below:
+      // some sessions (pre-dating the client-side profile-creation fixes,
+      // or any future silent failure of those paths) can have a valid auth
+      // session with no matching profiles row. Ensure one exists here,
+      // server-side, so booking creation never depends on client state.
+      // ignoreDuplicates means this never overwrites an existing row (e.g.
+      // full_name already set).
+      const { error: profileEnsureErr } = await ctx.supabaseAdmin
+        .from("profiles")
+        .upsert(
+          { id: user.id, role: "rider" },
+          { onConflict: "id", ignoreDuplicates: true }
+        );
+      if (profileEnsureErr) {
+        console.error("Failed to ensure rider profile exists", profileEnsureErr);
+        return Response.json({ error: "Could not verify rider profile" }, { status: 500 });
       }
 
       const {
@@ -24,10 +44,39 @@ export default {
         load_weight_kg,
         claimed_total_fare,
         paystack_reference,
+        payment_method,
+        scheduled_for,
       } = await req.json();
 
       if (!pickup_address || !dropoff_address || !vehicle_type_id) {
         return Response.json({ error: "Missing required fields" }, { status: 400 });
+      }
+
+      const paymentMethodKey = payment_method || "paystack_card";
+      const { data: methodRow, error: methodErr } = await ctx.supabaseAdmin
+        .from("payment_methods")
+        .select("key, provider, enabled")
+        .eq("key", paymentMethodKey)
+        .maybeSingle();
+
+      if (methodErr || !methodRow || !methodRow.enabled) {
+        return Response.json({ error: "That payment method is not available" }, { status: 400 });
+      }
+
+      if (methodRow.provider === "ozow") {
+        return Response.json({ error: "Instant EFT is not available yet" }, { status: 501 });
+      }
+
+      let scheduledForIso: string | null = null;
+      if (scheduled_for) {
+        const d = new Date(scheduled_for);
+        if (Number.isNaN(d.getTime())) {
+          return Response.json({ error: "Invalid scheduled time" }, { status: 400 });
+        }
+        if (d.getTime() < Date.now() - 60_000) {
+          return Response.json({ error: "Scheduled time must be in the future" }, { status: 400 });
+        }
+        scheduledForIso = d.toISOString();
       }
 
       const { data: vehicle, error: vehicleErr } = await ctx.supabaseAdmin
@@ -104,9 +153,46 @@ export default {
         );
       }
 
-      // Lock this exact calculation as a quote — the DB trigger requires this
-      // quote_id on every booking insert and overwrites financial fields from
-      // it, so this is the enforcement point, not just a pre-check.
+      let paystackVerified = false;
+      if (methodRow.provider === "paystack") {
+        if (!paystack_reference) {
+          return Response.json({ error: "Missing payment reference" }, { status: 400 });
+        }
+        if (!PAYSTACK_SECRET_KEY) {
+          console.error("PAYSTACK_SECRET_KEY not configured");
+          return Response.json({ error: "Payment verification unavailable" }, { status: 500 });
+        }
+
+        const { data: existingBooking } = await ctx.supabaseAdmin
+          .from("bookings")
+          .select("id")
+          .eq("paystack_reference", paystack_reference)
+          .maybeSingle();
+        if (existingBooking) {
+          return Response.json({ error: "This payment reference has already been used" }, { status: 409 });
+        }
+
+        const verifyRes = await fetch(
+          `https://api.paystack.co/transaction/verify/${encodeURIComponent(paystack_reference)}`,
+          { headers: { Authorization: `Bearer ${PAYSTACK_SECRET_KEY}` } }
+        );
+        const verifyData = await verifyRes.json();
+        const tx = verifyData?.data;
+
+        if (!verifyRes.ok || !tx || tx.status !== "success") {
+          console.error("Paystack verification failed", { reference: paystack_reference, verifyData });
+          return Response.json({ error: "Payment could not be verified" }, { status: 402 });
+        }
+
+        const expectedKobo = Math.round(realTotalFare * 100);
+        if (Math.abs(Number(tx.amount) - expectedKobo) > AMOUNT_TOLERANCE_KOBO) {
+          console.error("Paystack amount mismatch", { expected: expectedKobo, actual: tx.amount, reference: paystack_reference });
+          return Response.json({ error: "Payment amount mismatch" }, { status: 402 });
+        }
+
+        paystackVerified = true;
+      }
+
       const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
       const { data: quote, error: quoteErr } = await ctx.supabaseAdmin
         .from("fare_quotes")
@@ -151,8 +237,11 @@ export default {
           addons_total: addonsTotal,
           load_weight_kg: load_weight_kg ?? null,
           status: "pending",
+          payment_method: paymentMethodKey,
           paystack_reference: paystack_reference || null,
-          payout_status: paystack_reference ? "paid" : "unpaid",
+          paystack_verified: paystackVerified,
+          payout_status: paystackVerified ? "paid" : "pending",
+          scheduled_for: scheduledForIso,
         })
         .select()
         .single();
