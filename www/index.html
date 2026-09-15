@@ -751,10 +751,13 @@ footer .logo-svg{width:80px;height:auto;}
         <div class="sr"><span class="sk">Add-ons</span><span class="sv" id="cfAddons">None</span></div>
         <div class="sr"><span class="sk" style="font-weight:700;color:var(--w)">Total</span><span class="sv acc" id="cfTotal">R0</span></div>
       </div>
-      <div class="pay-row" onclick="go('payments')">
+      <div class="pay-row" onclick="togglePaymentMethod()">
         <div style="display:flex;align-items:center;gap:10px;">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="2" y="5" width="20" height="14" rx="3" stroke="var(--g40)" stroke-width="2"/><path d="M2 10h20" stroke="var(--g40)" stroke-width="2"/><rect x="5" y="14" width="5" height="2" rx="1" fill="var(--g60)"/></svg>
-          <div><div class="pay-s">Change payment method</div></div>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" id="cfPayIcon"><rect x="2" y="5" width="20" height="14" rx="3" stroke="var(--g40)" stroke-width="2"/><path d="M2 10h20" stroke="var(--g40)" stroke-width="2"/><rect x="5" y="14" width="5" height="2" rx="1" fill="var(--g60)"/></svg>
+          <div>
+            <div class="pay-l" id="cfPayLabel">Card</div>
+            <div class="pay-s" id="cfPaySub">Tap to switch to cash</div>
+          </div>
         </div>
         <svg width="8" height="13" viewBox="0 0 8 14" fill="none"><path d="M1 1l6 6-6 6" stroke="var(--g80)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </div>
@@ -1630,7 +1633,8 @@ const AppState={
   driver:{name:'Sipho Nkosi',vehicle:'Toyota Hilux · CA 123-456',rating:4.9,loads:312},
   fare:0,
   currentBookingId:null,
-  bookingSub:null
+  bookingSub:null,
+  paymentMethod:'paystack_card' // 'paystack_card' | 'cash'
 };
 
 function calcFare(){
@@ -1961,8 +1965,26 @@ function renderConfirmScreen(){
   set('cfAddons',AppState.addons.length?AppState.addons.map(a=>a.name).join(', '):'None');
   set('cfTotal','R'+calcFare());
 
+  // Payment method display on confirm
+  const isCash = AppState.paymentMethod === 'cash';
+  set('cfPayLabel', isCash ? 'Cash on delivery' : 'Card');
+  set('cfPaySub', isCash ? 'Tap to switch to card' : 'Tap to switch to cash');
+  const icon = document.getElementById('cfPayIcon');
+  if(icon){
+    if(isCash){
+      icon.innerHTML = '<circle cx="12" cy="12" r="9" stroke="var(--g40)" stroke-width="2"/><path d="M12 7v10M9 10h6M9 14h6" stroke="var(--g40)" stroke-width="2" stroke-linecap="round"/>';
+    }else{
+      icon.innerHTML = '<rect x="2" y="5" width="20" height="14" rx="3" stroke="var(--g40)" stroke-width="2"/><path d="M2 10h20" stroke="var(--g40)" stroke-width="2"/><rect x="5" y="14" width="5" height="2" rx="1" fill="var(--g60)"/>';
+    }
+  }
+
   const payBtn = document.querySelector('[onclick="payAndFindDriver()"]');
-  if(payBtn){ payBtn.disabled = false; payBtn.textContent = 'Find my driver'; }
+  if(payBtn){ payBtn.disabled = false; payBtn.textContent = isCash ? 'Request driver (pay cash)' : 'Find my driver'; }
+}
+
+function togglePaymentMethod(){
+  AppState.paymentMethod = AppState.paymentMethod === 'cash' ? 'paystack_card' : 'cash';
+  renderConfirmScreen();
 }
 
 /* ─── PAYMENT METHODS (admin-controlled via Supabase) ──── */
@@ -2049,7 +2071,8 @@ async function findDriver(){
       total_fare: calcFare(),
       addons: AppState.addons,
       addons_total: AppState.addons.reduce((s,a)=>s+a.price,0),
-      paystack_reference: window._pendingPaystackRef || null
+      paystack_reference: window._pendingPaystackRef || null,
+      payment_method: AppState.paymentMethod || 'paystack_card'
     });
     AppState.currentBookingId=booking.id;
     if(AppState.bookingSub){sb.removeChannel(AppState.bookingSub);}
