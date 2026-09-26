@@ -222,6 +222,7 @@ async function getRiderProfile() {
       await sb.from('profiles').upsert({
         id: user.id, role: 'rider', full_name: metaName,
         phone: user.phone || meta.phone || null,
+      avatar_url: meta.avatar_url || null,
       }, { onConflict: 'id' });
     } catch (e) { console.warn(e); }
     return { full_name: metaName, phone: user.phone || null, avatar_url: meta.avatar_url || null };
@@ -442,9 +443,9 @@ async function sbSignInWithApple() {
  *  deep link the system browser hands back after Google/Apple auth,
  *  closes the in-app browser, and exchanges the code for a session. */
 function initNativeOAuthListener(onSessionReady) {
-  if (!isNativeApp() || !window.Capacitor.Plugins || !window.Capacitor.Plugins.App) return;
-  window.Capacitor.Plugins.App.addListener('appUrlOpen', async function (event) {
-    const url = event && event.url;
+if (!isNativeApp() || !window.Capacitor.Plugins || !window.Capacitor.Plugins.App) return;
+window.Capacitor.Plugins.App.addListener('appUrlOpen', async function (event) {
+const url = event && event.url;
     if (!url || url.indexOf('eesyloadrider://auth-callback') !== 0) return;
     try {
       if (window.Capacitor.Plugins.Browser) {
