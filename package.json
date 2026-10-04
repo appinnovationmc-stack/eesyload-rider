@@ -2,7 +2,6 @@
   "name": "eesyload-rider",
   "version": "1.0.0",
   "description": "",
-  "main": "user-supabase-integration.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
