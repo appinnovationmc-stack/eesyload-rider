@@ -2758,7 +2758,7 @@ async function submitBusinessApplication(){
 function openSupportChat(){
   const bookingId = (typeof AppState !== 'undefined' && AppState.currentBookingId) ? AppState.currentBookingId : null;
   const body = bookingId ? ('Booking ID: ' + bookingId + '\n\n') : '';
-  window.location.href = 'mailto:support@eesyload.co.za?subject=' + encodeURIComponent('EesyLoad Rider Support') + '&body=' + encodeURIComponent(body);
+  window.location.href = 'mailto:support@eesyload.com?subject=' + encodeURIComponent('EesyLoad Rider Support') + '&body=' + encodeURIComponent(body);
 }
 function signOut(){
   if(!confirm('Sign out of EesyLoad?'))return;
