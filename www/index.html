@@ -560,6 +560,7 @@ footer .logo-svg{width:80px;height:auto;}
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://js.paystack.co/v1/inline.js"></script>
 <script src="user-supabase-integration.js"></script>
+<script src="rider-notify.js"></script>
 <script src="vehicle-icons.js"></script>
 <link rel="stylesheet" href="glass.css">
 </head>
@@ -2632,8 +2633,8 @@ async function triggerSOS(){
       if(loggedEl){
         loggedEl.style.display='';
         loggedEl.textContent = locationError
-          ? 'Alert logged without a location fix. Maobane Innovations will follow up with you.'
-          : 'Alert logged with your location. Maobane Innovations will follow up with you.';
+          ? 'Alert logged without a location fix. For immediate danger, call SAPS or an ambulance now.'
+          : 'Alert logged with your location. For immediate danger, call SAPS or an ambulance now.';
       }
     }catch(e){
       console.error('Failed to log SOS alert', e);
