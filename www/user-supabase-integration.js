@@ -178,7 +178,7 @@ async function sendChatMessage(bookingId, body) {
   const user = await sbGetCurrentUser();
   if (!user) throw new Error('Not signed in');
   const { data, error } = await sb.from('booking_messages')
-    .insert({ booking_id: bookingId, sender_id: user.id, body })
+    .insert({ booking_id: bookingId, sender_id: user.id, sender_role: 'rider', body })
     .select().single();
   if (error) throw error;
   return data;
